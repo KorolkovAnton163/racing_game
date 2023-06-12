@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "baseUrl": "./",
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "ES2020",
+    "typeRoots": [
+      "node_modules/@types",
+    ],
+    "lib": [
+      "es2020",
+      "dom",
+      "webworker"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

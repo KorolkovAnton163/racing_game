@@ -1,0 +1,235 @@
+.speedometer {
+    position: absolute;
+    left: -30px;
+    bottom: -70px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: #4d4d4d;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 0% 90%);
+    user-select: none;
+    pointer-events: none;
+    transform: scale(0.7);
+}
+
+.speedometer:before {
+    content: '';
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: #fff;
+    top: 10px;
+    left: 10px;
+    z-index: -1;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 81%, 0% 81%);
+}
+
+.speedometer:after {
+    content: '';
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: #4d4d4d;
+    top: 70px;
+    left: 70px;
+    z-index: -1;
+}
+
+.arrow {
+    position: relative;
+    background: #e36161;
+    height: 190px;
+    width: 20px;
+    left: 140px;
+    top: 3px;
+    clip-path: polygon(9px 10px, 11px 10px, 20px 150px, 10px 190px, 0 150px);
+    transform-origin: 10px 145px;
+}
+
+.arrow::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: gray;
+    top: 140px;
+    left: 5px;
+    border-radius: 50%;
+}
+
+
+.reverse {
+    position: absolute;
+    bottom: 90px;
+    right: 140px;
+    color: #ec7a37;
+    user-select: none;
+}
+
+.break {
+    position: absolute;
+    bottom: 90px;
+    right: 110px;
+    color: red;
+    user-select: none;
+}
+
+.ticks {
+    display: flex;
+    gap: 1px;
+}
+
+.tick {
+    transform-origin: bottom;
+    position: absolute;
+    background: linear-gradient(to top, transparent 90%, red 90%);
+    height: 140px;
+    width: 2px;
+    top: 10px;
+    left: 50%;
+    transform: rotate(var(--angle)) rotateZ(-127deg);
+}
+
+.tick:nth-child(odd)::before {
+    position: absolute;
+    content: attr(value) '';
+    color: #4d4d4d;
+    left: -8px;
+    top: 20px;
+    z-index: 11;
+    transform: rotate(var(--position-number));
+}
+
+.tick:nth-child(1) {
+    --angle: 0deg;
+    --position-number: 130deg;
+}
+
+.tick:nth-child(2) {
+    --angle: 13.3333333333deg;
+    --position-number: 116.5deg;
+}
+
+.tick:nth-child(3) {
+    --angle: 23.6666666667deg;
+    --position-number: 102deg;
+}
+
+.tick:nth-child(4) {
+    --angle: 33.6deg;
+    --position-number: 89.5deg;
+}
+
+.tick:nth-child(5) {
+    --angle: 43.3333333333deg;
+    --position-number: 83deg;
+}
+
+.tick:nth-child(6) {
+    --angle: 53deg;
+    --position-number: 62.5deg;
+}
+
+.tick:nth-child(7) {
+    --angle: 63deg;
+    --position-number: 62deg;
+}
+
+.tick:nth-child(8) {
+    --angle: 73.3333333333deg;
+    --position-number: 35.5deg;
+}
+
+.tick:nth-child(9) {
+    --angle: 83.6666666667deg;
+    --position-number: 40deg;
+}
+
+.tick:nth-child(10) {
+    --angle: 93deg;
+    --position-number: 8.5deg;
+}
+
+.tick:nth-child(11) {
+    --angle: 103.3333333333deg;
+    --position-number: 20deg;
+}
+
+.tick:nth-child(12) {
+    --angle: 113.6666666667deg;
+    --position-number: -18.5deg;
+}
+
+.tick:nth-child(13) {
+    --angle: 123.666666deg;
+    --position-number: 0deg;
+}
+
+.tick:nth-child(14) {
+    --angle: 133.3333333333deg;
+    --position-number: -45.5deg;
+}
+
+.tick:nth-child(15) {
+    --angle: 143.6666666667deg;
+    --position-number: -17deg;
+}
+
+.tick:nth-child(16) {
+    --angle: 153deg;
+    --position-number: -72.5deg;
+}
+
+.tick:nth-child(17) {
+    --angle: 163.3333333333deg;
+    --position-number: -37deg;
+}
+
+.tick:nth-child(18) {
+    --angle: 173.6666666667deg;
+    --position-number: -99.5deg;
+}
+
+.tick:nth-child(19) {
+    --angle: 183deg;
+    --position-number: -57deg;
+}
+
+.tick:nth-child(20) {
+    --angle: 193.3333333333deg;
+    --position-number: -126.5deg;
+}
+
+.tick:nth-child(21) {
+    --angle: 203.3333333333deg;
+    --position-number: -77deg;
+}
+
+.tick:nth-child(22) {
+    --angle: 213.3333333333deg;
+    --position-number: -126.5deg;
+}
+
+.tick:nth-child(23) {
+    --angle: 223.3333333333deg;
+    --position-number: -98deg;
+}
+
+.tick:nth-child(24) {
+    --angle: 233.3333333333deg;
+    --position-number: -126.5deg;
+}
+
+.tick:nth-child(25) {
+    --angle: 243.3333333333deg;
+    --position-number: -117deg;
+}
+
+.number {
+    position: absolute;
+    left: 120px;
+    bottom: 40px;
+    color: #fff;
+}

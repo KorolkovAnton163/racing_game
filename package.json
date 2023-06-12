@@ -1,0 +1,32 @@
+{
+  "name": "racing_game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && npm run serve",
+    "build": "webpack",
+    "serve": "webpack serve"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "file-loader": "^6.2.0",
+    "npm-run-all": "^4.1.5",
+    "ts-loader": "^9.4.3",
+    "typescript": "^5.1.3",
+    "webpack": "^5.85.1",
+    "webpack-cli": "^5.1.3",
+    "webpack-dev-server": "^4.15.0"
+  },
+  "dependencies": {
+    "@types/dat.gui": "^0.7.10",
+    "@types/three": "^0.152.1",
+    "ammo.js": "github:kripken/ammo.js",
+    "ammojs-typed": "^1.0.6",
+    "comlink": "^4.4.1",
+    "dat.gui": "^0.7.9",
+    "three": "^0.153.0",
+    "web-threads": "^1.0.135"
+  }
+}
