@@ -1,4 +1,10 @@
 import {Car} from "./Car";
+import {
+    WHEEL_BACK_LEFT,
+    WHEEL_BACK_RIGHT,
+    WHEEL_FRONT_LEFT,
+    WHEEL_FRONT_RIGHT
+} from "../interfaces/physic/IVehicleData";
 
 export class Evo6 extends Car {
     protected TRANSMISSION_FORCE = 500;
@@ -36,5 +42,5 @@ export class Evo6 extends Car {
 
     protected numberOfTransfers = [[20, 21], [40, 41], [60, 61], [80, 81], [100, 101], [120, 121]];
 
-    protected forceWheels = [this.FRONT_LEFT, this.FRONT_RIGHT, this.BACK_LEFT, this.BACK_RIGHT];
+    protected forceWheels = [WHEEL_FRONT_LEFT, WHEEL_FRONT_RIGHT, WHEEL_BACK_LEFT, WHEEL_BACK_RIGHT];
 }

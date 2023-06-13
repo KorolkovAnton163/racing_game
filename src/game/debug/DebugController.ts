@@ -20,16 +20,16 @@ export class DebugController {
 
     private enabled: boolean = true;
 
-    private debugGeometry: THREE.BufferGeometry;
+    // private debugGeometry: THREE.BufferGeometry;
 
-    private debugDrawer: AmmoDebugDrawer;
+    // private debugDrawer: AmmoDebugDrawer;
 
-    public init(world: Ammo.btDiscreteDynamicsWorld, scene: Scene, sun: DirectionLight): void {
+    public init(scene: Scene, sun: DirectionLight): void {
         if (!this.enabled) {
             return;
         }
 
-        this.world = world;
+        // this.world = world;
         this.scene = scene;
         this.sun = sun;
 
@@ -42,21 +42,21 @@ export class DebugController {
 
         document.body.appendChild(this.stats.dom);
 
-        const debugVertices = new Float32Array(DefaultBufferSize);
-        const debugColors = new Float32Array(DefaultBufferSize);
-
-        this.debugGeometry = new THREE.BufferGeometry();
-        this.debugGeometry.setAttribute("position", new THREE.BufferAttribute(debugVertices, 3));
-        this.debugGeometry.setAttribute("color", new THREE.BufferAttribute(debugColors, 3));
-
-        const debugMaterial = new THREE.LineBasicMaterial({ vertexColors: true });
-        const debugMesh = new THREE.LineSegments(this.debugGeometry, debugMaterial);
-
-        debugMesh.frustumCulled = false;
-        scene.addObject(debugMesh);
-
-        this.debugDrawer = new AmmoDebugDrawer(null, debugVertices, debugColors, this.world);
-        this.debugDrawer.enable();
+        // const debugVertices = new Float32Array(DefaultBufferSize);
+        // const debugColors = new Float32Array(DefaultBufferSize);
+        //
+        // this.debugGeometry = new THREE.BufferGeometry();
+        // this.debugGeometry.setAttribute("position", new THREE.BufferAttribute(debugVertices, 3));
+        // this.debugGeometry.setAttribute("color", new THREE.BufferAttribute(debugColors, 3));
+        //
+        // const debugMaterial = new THREE.LineBasicMaterial({ vertexColors: true });
+        // const debugMesh = new THREE.LineSegments(this.debugGeometry, debugMaterial);
+        //
+        // debugMesh.frustumCulled = false;
+        // scene.addObject(debugMesh);
+        //
+        // this.debugDrawer = new AmmoDebugDrawer(null, debugVertices, debugColors, this.world);
+        // this.debugDrawer.enable();
     }
 
     public getDebugMode(): number {
@@ -68,13 +68,13 @@ export class DebugController {
             return;
         }
 
-        if (this.debugDrawer.index !== 0) {
-            this.debugGeometry.attributes.position.needsUpdate = true;
-            this.debugGeometry.attributes.color.needsUpdate = true;
-        }
-
-        this.debugGeometry.setDrawRange(0, Number(this.debugDrawer.index));
-        this.debugDrawer.update();
+        // if (this.debugDrawer.index !== 0) {
+        //     this.debugGeometry.attributes.position.needsUpdate = true;
+        //     this.debugGeometry.attributes.color.needsUpdate = true;
+        // }
+        //
+        // this.debugGeometry.setDrawRange(0, Number(this.debugDrawer.index));
+        // this.debugDrawer.update();
 
         this.stats.update();
     }

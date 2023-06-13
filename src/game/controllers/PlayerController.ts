@@ -7,6 +7,7 @@ import {Renderer} from "../Renderer";
 import {Car} from "../models/Car";
 import {SpeedometerComponent} from "../components/SpeedometerComponent";
 import {Evo6} from "../models/Evo6";
+import {AmmoPhysics} from "../physics/AmmoPhysics";
 
 export class PlayerController {
     private readonly START_CAR_POSITION = new THREE.Vector3(0, 1, -20);
@@ -27,12 +28,15 @@ export class PlayerController {
 
     private camera: Camera;
 
+    private physics: AmmoPhysics;
+
     private car: Car;
 
     private speedometer: SpeedometerComponent;
 
-    constructor(model: ICarModel, scene: Scene, renderer: Renderer, camera: Camera, world: Ammo.btDiscreteDynamicsWorld) {
+    constructor(model: ICarModel, scene: Scene, renderer: Renderer, camera: Camera, physics: AmmoPhysics) {
         this.camera = camera;
+        this.physics = physics;
         this.speedometer = new SpeedometerComponent();
         this.controls = new OrbitControls(camera.getCamera(), renderer.getElement());
         this.controls.enablePan = true;
@@ -41,7 +45,7 @@ export class PlayerController {
         this.controls.maxDistance = 3.5;
         this.controls.maxPolarAngle = Math.PI / 1.7;
 
-        this.car = new Evo6(scene, camera, world, this.START_CAR_POSITION);
+        this.car = new Evo6(scene, camera, this.physics, this.START_CAR_POSITION);
 
         this.car.init(model);
 
@@ -52,8 +56,6 @@ export class PlayerController {
 
     public update(delta: number): void {
         const cameraSubPosition = this.camera.subPosition(this.car.meshPosition);
-
-        this.car.update(delta, this.actions);
 
         this.updateCameraTarget(this.car.meshPosition, cameraSubPosition);
 
@@ -86,13 +88,15 @@ export class PlayerController {
                 e.preventDefault();
                 e.stopPropagation();
 
+                this.physics.vehicleAction(this.car.uuid(), this.actions);
+
                 return false;
             }
         });
 
         window.addEventListener('keyup', (e: KeyboardEvent) => {
             if (e.code === 'KeyR') {
-                this.car.respawn();
+                this.physics.vehicleRespawn(this.car.uuid());
 
                 return;
             }
@@ -102,6 +106,8 @@ export class PlayerController {
 
                 e.preventDefault();
                 e.stopPropagation();
+
+                this.physics.vehicleAction(this.car.uuid(), this.actions);
 
                 return false;
             }

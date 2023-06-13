@@ -7,7 +7,7 @@ npm install
 ```
 
 ```bash
-npm run serve
+npm run start
 ```
 
 - [three.js](https://github.com/mrdoob/three.js)

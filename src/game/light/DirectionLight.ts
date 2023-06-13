@@ -4,7 +4,7 @@ import {Camera} from "../Camera";
 
 export class DirectionLight implements ILight {
 
-    protected readonly d = 20.0;
+    protected readonly d = 40.0;
 
     protected light: THREE.DirectionalLight;
 

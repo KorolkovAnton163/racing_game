@@ -1,6 +1,8 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 const path = require('path');
 
-const src = path.resolve(__dirname, 'src');
+const public = path.resolve(__dirname, 'public');
 
 module.exports = {
   mode: 'development',
@@ -20,12 +22,23 @@ module.exports = {
   },
   output: {
     filename: 'index.js',
-    path: src
+    path: public,
   },
   devServer: {
-    static: src,
+    static: public,
   },
   experiments: {
     asyncWebAssembly: true,
   },
+  plugins: [
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, 'src/index.html'),
+      }),
+      // new CopyPlugin({
+      //   patterns: [
+      //     { from: path.resolve('src/ammo'), to: path.resolve('dist') },
+      //     { from: path.resolve('src/assets'), to: path.resolve('dist/assets') }
+      //   ]
+      // })
+  ]
 }
