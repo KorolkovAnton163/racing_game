@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import {Scene} from "../Scene";
 import {AmmoPhysics} from "../physics/AmmoPhysics";
-import {IGObject} from "./IGObject";
+import {IGameObject} from "../interfaces/IGameObject";
 
-export class Box implements IGObject {
+export class Box implements IGameObject {
     private scene: Scene;
 
     private physics: AmmoPhysics;

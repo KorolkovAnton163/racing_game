@@ -34,7 +34,7 @@ export class Physics {
         const updates: Record<string, number[]> = {};
         const dt = delta / 1000;
 
-        this.world.stepSimulation(dt, 10, 1 / 60);
+        this.world.stepSimulation(dt, 5, 1 / 60);
 
         this.bodies.forEach((b: PhysicBody) => {
             b.update(dt, updates);

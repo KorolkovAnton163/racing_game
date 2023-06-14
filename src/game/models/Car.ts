@@ -4,7 +4,7 @@ import {Camera} from "../Camera";
 import {GLTF} from "three/examples/jsm/loaders/GLTFLoader";
 import {ICarModel} from "../interfaces/ICarModel";
 import {AmmoPhysics} from "../physics/AmmoPhysics";
-import {IGObject} from "./IGObject";
+import {IGameObject} from "../interfaces/IGameObject";
 import {
     WHEEL_BACK_LEFT,
     WHEEL_BACK_RIGHT,
@@ -12,7 +12,7 @@ import {
     WHEEL_FRONT_RIGHT
 } from "../interfaces/physic/IVehicleData";
 
-export abstract class Car implements IGObject {
+export abstract class Car implements IGameObject {
     protected abstract TRANSMISSION_FORCE: number; //сила с которой машина наирает скорость при переключении передач
 
     protected abstract TRANSMISSION_BREAKING_FORCE: number;
@@ -68,6 +68,10 @@ export abstract class Car implements IGObject {
     private wheelMeshes: THREE.Object3D[] = [];
 
     private speedKmHour = 0;
+
+    public get object(): THREE.Object3D {
+        return this.mesh;
+    }
 
     public get speed(): number {
         return this.speedKmHour;

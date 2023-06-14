@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as Comlink from 'comlink'
 import {Physics} from "./Physics";
 import {IPhysicBoxData} from "../interfaces/physic/IPhysicBoxData";
-import {IGObject} from "../models/IGObject";
+import {IGameObject} from "../interfaces/IGameObject";
 import {IVehicleData} from "../interfaces/physic/IVehicleData";
 
 export class AmmoPhysics {
@@ -12,7 +12,7 @@ export class AmmoPhysics {
 
     private physics: Physics;
 
-    public objects: Map<string, IGObject> = new Map();
+    public objects: Map<string, IGameObject> = new Map();
 
     constructor(worker: Worker) {
         this.worker = worker;
@@ -37,13 +37,13 @@ export class AmmoPhysics {
         });
     }
 
-    public addBox(object: IGObject, data: IPhysicBoxData): void {
+    public addBox(object: IGameObject, data: IPhysicBoxData): void {
         this.objects.set(object.uuid(), object);
 
         this.physics.addBox(object.uuid(), data);
     }
 
-    public addVehicle(object: IGObject, data: IVehicleData): void {
+    public addVehicle(object: IGameObject, data: IVehicleData): void {
         this.objects.set(object.uuid(), object);
 
         this.physics.addVehicle(object.uuid(), data);
