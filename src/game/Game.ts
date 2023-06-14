@@ -113,7 +113,7 @@ export class Game {
             this.scene.addObject(this.sun.getTarget());
             this.scene.addObject(this.sun.getHelper());
 
-            this.sky.setScalar(1000);
+            this.sky.setScalar(2000);
             this.scene.addObject(this.sky.getMesh());
 
             //Статические объекты
