@@ -28,7 +28,7 @@ export class Evo6 extends Car {
     protected wheelHalfTrackBack = 0.32;
     protected wheelAxisHeightBack = 0.1;
 
-    protected friction = 2000;
+    protected friction = 4.5;
     protected suspensionStiffness = 20.0;
     protected suspensionDamping = 7.0;
     protected suspensionCompression = 4.4;

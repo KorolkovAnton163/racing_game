@@ -96,6 +96,10 @@ export class PlayerController {
 
         window.addEventListener('keyup', (e: KeyboardEvent) => {
             if (e.code === 'KeyR') {
+                if (this.car.speed > 1) {
+                    return;
+                }
+
                 this.physics.vehicleRespawn(this.car.uuid());
 
                 return;

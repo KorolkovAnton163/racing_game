@@ -23,7 +23,7 @@ export class Rx7 extends Car {
     protected wheelHalfTrackBack = 0.35;
     protected wheelAxisHeightBack = 0.12;
 
-    protected friction = 2000;
+    protected friction = 4;
     protected suspensionStiffness = 20.0;
     protected suspensionDamping = 7.0;
     protected suspensionCompression = 4.4;
