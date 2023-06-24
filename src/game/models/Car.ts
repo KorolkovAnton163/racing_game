@@ -11,8 +11,13 @@ import {
     WHEEL_FRONT_LEFT,
     WHEEL_FRONT_RIGHT
 } from "../interfaces/physic/IVehicleData";
+import Materials, {MaterialType} from "../utils/Materials";
 
 export abstract class Car implements IGameObject {
+    protected abstract MAX_ENGINE_FORCE: number; //мкасимальная сила скоторой машина набирает скорость //2000
+
+    protected abstract MAX_BREAKING_FORCE: number; //сала торможения //100
+
     protected abstract TRANSMISSION_FORCE: number; //сила с которой машина наирает скорость при переключении передач
 
     protected abstract TRANSMISSION_BREAKING_FORCE: number;
@@ -36,7 +41,7 @@ export abstract class Car implements IGameObject {
     protected abstract wheelHalfTrackBack: number; //вылет колес
     protected abstract wheelAxisHeightBack: number; //высота колес
 
-    protected abstract friction: number; //трение
+    protected abstract friction: number; //трение (влиет на управляемсто в поворотах)
     protected abstract suspensionStiffness: number; //высота подвески
     protected abstract suspensionDamping: number; //жесткость подвески //было 2.3
     protected abstract suspensionCompression: number; //не понятно на что влиет //было 4.4
@@ -53,6 +58,8 @@ export abstract class Car implements IGameObject {
 
     protected abstract forceWheels: number[];
 
+    protected abstract materials: Record<string, { type: MaterialType, color: number, params?: THREE.MeshStandardMaterialParameters }>;
+
     private readonly ZERO_QUATERNION: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
 
     private scene: Scene;
@@ -68,6 +75,8 @@ export abstract class Car implements IGameObject {
     private wheelMeshes: THREE.Object3D[] = [];
 
     private speedKmHour = 0;
+
+    protected cubeTexture: THREE.CubeTexture;
 
     public get object(): THREE.Object3D {
         return this.mesh;
@@ -96,13 +105,22 @@ export abstract class Car implements IGameObject {
         return this.mesh.uuid;
     }
 
-    public init(model: ICarModel): void {
+    public init(model: ICarModel, cubeTexture: THREE.CubeTexture): void {
         this.mesh = model.body.scene.clone();
+        this.cubeTexture = cubeTexture;
 
         this.mesh.traverse((object: THREE.Object3D) => {
             if (object instanceof THREE.Mesh) {
                 object.castShadow = true;
                 object.receiveShadow = true;
+
+                if (object.material instanceof THREE.Material) {
+                    const material = this.materials[object.material.name];
+
+                    if (material) {
+                        object.material = Materials.create(material.type, material.color, object.material.name, material.params);
+                    }
+                }
             }
         });
 
@@ -140,6 +158,8 @@ export abstract class Car implements IGameObject {
             wheelWidthBack: this.wheelWidthBack,
             steeringClamp: this.steeringClamp,
             numberOfTransfers: this.numberOfTransfers,
+            MAX_ENGINE_FORCE: this.MAX_ENGINE_FORCE,
+            MAX_BREAKING_FORCE: this.MAX_BREAKING_FORCE,
             TRANSMISSION_FORCE: this.TRANSMISSION_FORCE,
             TRANSMISSION_BREAKING_FORCE: this.TRANSMISSION_BREAKING_FORCE,
             maxAccelerationSpeed: this.maxAccelerationSpeed,

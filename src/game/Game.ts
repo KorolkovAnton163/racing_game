@@ -11,12 +11,13 @@ import {DebugController} from "./debug/DebugController";
 import {ICarModel} from "./interfaces/ICarModel";
 import {PlayerController} from "./controllers/PlayerController";
 import {Cars} from "./consts/cars";
-import {Car} from "./models/Car";
 import {Rx7} from "./models/Rx7";
 import {Savana} from "./models/Savana";
 import {SilviaS13} from "./models/SilviaS13";
 import {AmmoPhysics} from "./physics/AmmoPhysics";
 import {Box} from "./models/Box";
+import {PointLight} from "./light/PointLight";
+import {Texture} from "./utils/Texture";
 
 export class Game {
     public clock: THREE.Clock;
@@ -33,6 +34,8 @@ export class Game {
 
     public hLight: HemisphereLight;
 
+    public pLight: PointLight;
+
     public sky: Sky;
 
     public physics: AmmoPhysics;
@@ -42,10 +45,6 @@ export class Game {
     private objectTimePeriod: number = 3;
 
     private timeNextSpawn: number = 0;
-
-    private materialDynamic: THREE.MeshPhongMaterial;
-
-    private materialStatic: THREE.MeshPhongMaterial;
 
     private readonly ZERO_QUATERNION: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
 
@@ -62,12 +61,10 @@ export class Game {
         this.sun = new DirectionLight();
         this.aLight = new AmbientLight();
         this.hLight = new HemisphereLight();
+        this.pLight = new PointLight();
         this.sky = new Sky();
 
         this.physics = new AmmoPhysics(new Worker('physics.worker.js'));
-
-        this.materialDynamic = new THREE.MeshPhongMaterial( { color: 0xfca400 } );
-        this.materialStatic = new THREE.MeshPhongMaterial( { color: 0x999999 } );
 
         this.debugController = new DebugController();
     }
@@ -78,6 +75,8 @@ export class Game {
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
     }
+
+    private cubeTexture: THREE.CubeTexture;
 
     private async loadData(): Promise<void> {
         for (const car in Cars) {
@@ -91,6 +90,45 @@ export class Game {
                 }
             };
         }
+
+        this.cubeTexture = await Texture.loadCube([
+            'assets/px.png', 'assets/nx.png',
+            'assets/px.png', 'assets/ny.png',
+            'assets/pz.png', 'assets/nz.png',
+        ]);
+    }
+
+    private createTestMap(): void {
+        // const g = new THREE.PlaneGeometry(300, 300, 1, 1);
+        //
+        // const m = new THREE.MeshStandardMaterial({
+        //     map: Texture.load(`/assets/map.png`),
+        //     roughness: 0.6
+        // });
+        //
+        // const mesh = new THREE.Mesh(g, m);
+        //
+        // mesh.rotateX(- Math.PI / 2);
+        // mesh.rotateZ(0.35);
+        // mesh.receiveShadow = true;
+        // mesh.castShadow = true;
+        // mesh.position.y = -0.51;
+        //
+        // this.scene.addObject(mesh);
+
+        [
+            [14.0, 10.0, -4.0, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 55.0, 0.0, 0.0],
+            [31.0, 10.0, 19.0, 0.0, 0.0, 0.0, 1.0, 25.0, 20.0, 9.0, 0.0, 0.0],
+            [-14.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0, 9.0, 18.0, 39.0, 0.0, 0.0],
+            [14.6, 10.0, 68.5, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 40.0, 0.0, 0.0],
+            [26.0, 10.0, 44.6, 0.0, 0.0, 0.0, 1.0, 32.0, 20.0, 9.0, 0.0, 0.0],
+            [59.0, 6.0, 77.0, 0.0, 0.0, 0.0, 1.0, 9.0, 12.0, 38.0, 0.0, 0.0],
+        ].forEach((box: number[]) => {
+            new Box(this.scene, this.physics,
+                new THREE.Vector3(box[0], box[1], box[2]),
+                new THREE.Quaternion(box[3], box[4], box[5], box[6]),
+                box[7], box[8], box[9], box[10], box[11]);
+        });
     }
 
     public async run(): Promise<void> {
@@ -106,12 +144,13 @@ export class Game {
 
             this.camera.setPosition(-4.84, 4.39, -35.11);
 
-            this.hLight.setPosition(0, 1000, 0);
+            this.hLight.setPosition(0, 50, 0);
             this.sun.setFromSphericalCoords(45.0, 180);
             this.scene.addLight(this.hLight);
             this.scene.addLight(this.sun);
             this.scene.addObject(this.sun.getTarget());
             this.scene.addObject(this.sun.getHelper());
+            this.scene.addObject(this.hLight.getHelper());
 
             this.sky.setScalar(2000);
             this.scene.addObject(this.sky.getMesh());
@@ -152,18 +191,20 @@ export class Game {
                 }
             }
 
+            this.createTestMap();
+
             //Машины
             const rx7 = new Rx7(this.scene, this.camera, this.physics, new THREE.Vector3(2, 1, -20));
 
-            rx7.init(this.models['rx_7']);
+            rx7.init(this.models['rx_7'], this.cubeTexture);
 
             const savana = new Savana(this.scene, this.camera, this.physics, new THREE.Vector3(3, 1, -20));
 
-            savana.init(this.models['savana']);
+            savana.init(this.models['savana'], this.cubeTexture);
 
             const s13 = new SilviaS13(this.scene, this.camera, this.physics, new THREE.Vector3(1, 1, -20));
 
-            s13.init(this.models['silvia_s13']);
+            s13.init(this.models['silvia_s13'], this.cubeTexture);
 
             this.playerController = new PlayerController(
                 this.models['evo_6'],
@@ -171,9 +212,10 @@ export class Game {
                 this.renderer,
                 this.camera,
                 this.physics,
+                this.cubeTexture,
             );
 
-            document.body.appendChild(this.renderer.getElement());
+            document.getElementById('canvas').appendChild(this.renderer.getElement());
 
             this.debugController.init(this.scene, this.sun);
 

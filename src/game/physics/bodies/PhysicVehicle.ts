@@ -1,6 +1,6 @@
 import {PhysicBody} from "./PhysicBody";
 import {
-    IVehicleData, MAX_BREAKING_FORCE, MAX_ENGINE_FORCE,
+    IVehicleData,
     WHEEL_BACK_LEFT,
     WHEEL_BACK_RIGHT,
     WHEEL_FRONT_LEFT,
@@ -120,7 +120,7 @@ export class PhysicVehicle extends PhysicBody {
         const q = wt.getRotation();
 
         this.engineForce = 0;
-        this.breakingForce = MAX_BREAKING_FORCE;
+        this.breakingForce = this.data.MAX_BREAKING_FORCE;
         this.vehicle.getChassisWorldTransform().setOrigin(r)
         this.vehicle.getChassisWorldTransform().setRotation(new Ammo.btQuaternion(0, q.y(),0, q.w()));
     }
@@ -134,26 +134,26 @@ export class PhysicVehicle extends PhysicBody {
         this.engineForce = 0;
 
         if (this.actions.break && rs > 0) {
-            this.breakingForce = MAX_BREAKING_FORCE;
+            this.breakingForce = this.data.MAX_BREAKING_FORCE;
         } else {
             if (this.actions.acceleration) {
                 if (speed < -1) {
-                    this.breakingForce = MAX_BREAKING_FORCE;
+                    this.breakingForce = this.data.MAX_BREAKING_FORCE;
                 } else {
-                    this.engineForce = MAX_ENGINE_FORCE;
+                    this.engineForce = this.data.MAX_ENGINE_FORCE;
                 }
             }
 
             if (this.actions.braking) {
                 if (speed > 1) {
-                    this.breakingForce = MAX_BREAKING_FORCE;
+                    this.breakingForce = this.data.MAX_BREAKING_FORCE;
                 } else {
-                    this.engineForce = -MAX_ENGINE_FORCE / 4;
+                    this.engineForce = -this.data.MAX_ENGINE_FORCE / 2;
                 }
             }
 
             if (!this.actions.acceleration && !this.actions.braking && rs > 0) {
-                this.breakingForce += MAX_BREAKING_FORCE * dt;
+                this.breakingForce += this.data.MAX_BREAKING_FORCE * dt;
             }
         }
 

@@ -15,6 +15,7 @@ export class Renderer {
         this.renderer.useLegacyLights = true;
         this.renderer.outputColorSpace = SRGBColorSpace;
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 0.85;
     }
 
     public setSize(width: number, height: number): void {

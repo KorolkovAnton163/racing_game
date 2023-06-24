@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 export const WHEEL_FRONT_LEFT = 0;
 
 export const WHEEL_FRONT_RIGHT = 1;
@@ -7,10 +5,6 @@ export const WHEEL_FRONT_RIGHT = 1;
 export const WHEEL_BACK_LEFT = 2;
 
 export const WHEEL_BACK_RIGHT = 3;
-
-export const MAX_ENGINE_FORCE = 2000; //мкасимальная сила скоторой машина набирает //2000
-
-export const MAX_BREAKING_FORCE = 100; //масимальная сила торможения
 
 export interface IVehicleData {
     chassisWidth: number;
@@ -46,6 +40,8 @@ export interface IVehicleData {
     wheelWidthBack: number;
     steeringClamp: number;
     numberOfTransfers: number[][];
+    MAX_ENGINE_FORCE: number;
+    MAX_BREAKING_FORCE: number;
     TRANSMISSION_FORCE: number;
     TRANSMISSION_BREAKING_FORCE: number;
     maxAccelerationSpeed: number;

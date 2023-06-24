@@ -4,7 +4,7 @@ import {Camera} from "../Camera";
 
 export class DirectionLight implements ILight {
 
-    protected readonly d = 40.0;
+    protected readonly d = 50.0;
 
     protected light: THREE.DirectionalLight;
 
@@ -15,24 +15,27 @@ export class DirectionLight implements ILight {
     }
 
     constructor() {
-        this.light = new THREE.DirectionalLight(0xFFFFFF, 0.6);
+        this.light = new THREE.DirectionalLight(0xFFFFFF, 1);
+
+        this.light.color.setHSL(0.1, 1, 0.95);
+        this.light.position.multiplyScalar(30);
 
         this.light.castShadow = true;
-        this.light.shadow.mapSize.x = 4096.0;
-        this.light.shadow.mapSize.y = 4096.0;
-        this.light.shadow.camera.near = 0.1;
-        this.light.shadow.camera.far = 1000.0;
+        this.light.shadow.mapSize.width = 2048.0;
+        this.light.shadow.mapSize.height = 2048.0;
+        this.light.shadow.camera.left = -this.d;
+        this.light.shadow.camera.right = this.d;
+        this.light.shadow.camera.top = this.d;
+        this.light.shadow.camera.bottom = -this.d;
+        this.light.shadow.camera.near = 1.0;
+        this.light.shadow.camera.far = 3500.0;
         this.light.shadow.bias = -0.00001;
         this.light.shadow.radius = 0.5;
         this.light.shadow.blurSamples = 2.0;
         this.light.shadow.autoUpdate = true;
         this.light.shadow.needsUpdate = true;
-        this.light.shadow.camera.left = -this.d;
-        this.light.shadow.camera.right = this.d;
-        this.light.shadow.camera.top = this.d;
-        this.light.shadow.camera.bottom = -this.d;
 
-        this.helper = new THREE.DirectionalLightHelper(this.light, 1.0);
+        this.helper = new THREE.DirectionalLightHelper(this.light, 10.0);
     }
 
     public getLight(): THREE.DirectionalLight {
@@ -56,7 +59,7 @@ export class DirectionLight implements ILight {
         const phi = THREE.MathUtils.degToRad(90 - elevation);
         const theta = THREE.MathUtils.degToRad(azimuth);
 
-        this.light.position.setFromSphericalCoords( 500, phi, theta );
+        this.light.position.setFromSphericalCoords( 100, phi, theta);
     }
 
     public update(camera: Camera): void {

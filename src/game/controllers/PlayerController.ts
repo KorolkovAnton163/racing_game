@@ -34,7 +34,7 @@ export class PlayerController {
 
     private speedometer: SpeedometerComponent;
 
-    constructor(model: ICarModel, scene: Scene, renderer: Renderer, camera: Camera, physics: AmmoPhysics) {
+    constructor(model: ICarModel, scene: Scene, renderer: Renderer, camera: Camera, physics: AmmoPhysics, cubeTexture: THREE.CubeTexture) {
         this.camera = camera;
         this.physics = physics;
         this.speedometer = new SpeedometerComponent();
@@ -47,7 +47,7 @@ export class PlayerController {
 
         this.car = new Evo6(scene, camera, this.physics, this.START_CAR_POSITION);
 
-        this.car.init(model);
+        this.car.init(model, cubeTexture);
 
         this.updateCameraTarget(this.START_CAR_POSITION, new THREE.Vector3(0.0,1.0,5.0));
 
