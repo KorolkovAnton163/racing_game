@@ -74,6 +74,10 @@ export abstract class Car implements IGameObject {
 
     private wheelMeshes: THREE.Object3D[] = [];
 
+    private debugMesh: THREE.Object3D;
+
+    private debugWheelMeshes: THREE.Object3D[] = [];
+
     private speedKmHour = 0;
 
     protected cubeTexture: THREE.CubeTexture;
@@ -167,6 +171,14 @@ export abstract class Car implements IGameObject {
             forceWheels: this.forceWheels,
         });
 
+        this.debugMesh = new THREE.Mesh(new THREE.BoxGeometry(
+            this.chassisWidth,
+            this.chassisHeight,
+            this.chassisLength, 1, 1, 1),
+            new THREE.MeshPhongMaterial( { color :0x990000, wireframe: true }),
+        );
+
+        this.scene.addObject(this.debugMesh);
         this.scene.addObject(this.mesh);
 
         this.createWheel(model.wheels.fr, WHEEL_FRONT_LEFT);
@@ -178,6 +190,9 @@ export abstract class Car implements IGameObject {
     public update(updates: number[]): void {
         this.mesh.position.set(updates[0], updates[1], updates[2]);
         this.mesh.quaternion.set(updates[3], updates[4], updates[5], updates[6]);
+
+        this.debugMesh.position.set(updates[0], updates[1], updates[2]);
+        this.debugMesh.quaternion.set(updates[3], updates[4], updates[5], updates[6]);
 
         this.wheelMeshes[WHEEL_FRONT_LEFT].position.set(updates[7], updates[8], updates[9]);
         this.wheelMeshes[WHEEL_FRONT_LEFT].quaternion.set(updates[10], updates[11], updates[12], updates[13]);
@@ -191,6 +206,18 @@ export abstract class Car implements IGameObject {
         this.wheelMeshes[WHEEL_BACK_RIGHT].position.set(updates[28], updates[29], updates[30]);
         this.wheelMeshes[WHEEL_BACK_RIGHT].quaternion.set(updates[31], updates[32], updates[33], updates[34]);
 
+        this.debugWheelMeshes[WHEEL_FRONT_LEFT].position.set(updates[7], updates[8], updates[9]);
+        this.debugWheelMeshes[WHEEL_FRONT_LEFT].quaternion.set(updates[10], updates[11], updates[12], updates[13]);
+
+        this.debugWheelMeshes[WHEEL_FRONT_RIGHT].position.set(updates[14], updates[15], updates[16]);
+        this.debugWheelMeshes[WHEEL_FRONT_RIGHT].quaternion.set(updates[17], updates[18], updates[19], updates[20]);
+
+        this.debugWheelMeshes[WHEEL_BACK_LEFT].position.set(updates[21], updates[22], updates[23]);
+        this.debugWheelMeshes[WHEEL_BACK_LEFT].quaternion.set(updates[24], updates[25], updates[26], updates[27]);
+
+        this.debugWheelMeshes[WHEEL_BACK_RIGHT].position.set(updates[28], updates[29], updates[30]);
+        this.debugWheelMeshes[WHEEL_BACK_RIGHT].quaternion.set(updates[31], updates[32], updates[33], updates[34]);
+
         this.speedKmHour = updates[35];
     }
 
@@ -203,6 +230,23 @@ export abstract class Car implements IGameObject {
             }
         });
 
+        this.createDebugWheel(index);
+
         this.scene.addObject(this.wheelMeshes[index]);
+    }
+
+    private createDebugWheel(index: number): void {
+        const radius = index === WHEEL_FRONT_LEFT || index === WHEEL_FRONT_RIGHT ? this.wheelRadiusFront : this.wheelRadiusBack;
+        const width = index === WHEEL_FRONT_LEFT || index === WHEEL_FRONT_RIGHT ? this.wheelWidthFront : this.wheelWidthBack;
+        const cylinder = new THREE.CylinderGeometry(radius, radius, width, 24, 1);
+
+        cylinder.rotateZ(Math.PI / 2);
+
+        this.debugWheelMeshes[index] = new THREE.Mesh(
+            cylinder,
+            new THREE.MeshPhongMaterial( { color :0x990000, wireframe: true })
+        );
+
+        this.scene.addObject(this.debugWheelMeshes[index]);
     }
 }
