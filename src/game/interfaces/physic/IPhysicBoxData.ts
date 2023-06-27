@@ -17,4 +17,5 @@ export interface IPhysicBoxData {
     h: number;
     mass: number;
     friction: number;
+    activation: number;
 }

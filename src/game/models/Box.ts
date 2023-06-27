@@ -23,7 +23,8 @@ export class Box implements IGameObject {
         l: number,
         h: number,
         mass: number = 0,
-        friction: number = 1
+        friction: number = 1,
+        activation: number = 5,
     ) {
         const material = mass > 0 ? this.materialDynamic : this.materialStatic;
         const shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
@@ -55,6 +56,7 @@ export class Box implements IGameObject {
             h: h,
             mass: mass,
             friction: friction,
+            activation: activation,
         });
 
         this.scene.addObject(this.mesh);

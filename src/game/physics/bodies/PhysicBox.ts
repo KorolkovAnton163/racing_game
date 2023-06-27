@@ -1,5 +1,6 @@
 import {PhysicBody} from "./PhysicBody";
 import {IPhysicBoxData} from "../../interfaces/physic/IPhysicBoxData";
+import {ISLAND_SLEEPING} from "../../consts/physics";
 
 export class PhysicBox extends PhysicBody {
     private world: Ammo.btDiscreteDynamicsWorld;
@@ -39,8 +40,7 @@ export class PhysicBox extends PhysicBody {
         this.body.setFriction(data.friction);
 
         if (!this.static) {
-            //TODO: Move to const DISABLE_DEACTIVATION
-            this.body.setActivationState(4);
+            this.body.setActivationState(data.activation);
         }
 
         this.world.addRigidBody(this.body);

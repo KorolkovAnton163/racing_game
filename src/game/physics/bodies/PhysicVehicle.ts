@@ -6,6 +6,7 @@ import {
     WHEEL_FRONT_LEFT,
     WHEEL_FRONT_RIGHT
 } from "../../interfaces/physic/IVehicleData";
+import {DISABLE_DEACTIVATION} from "../../consts/physics";
 
 export class PhysicVehicle extends PhysicBody {
     protected uuid: string;
@@ -74,8 +75,7 @@ export class PhysicVehicle extends PhysicBody {
             this.localInertia
         ));
 
-        //TODO: move to const DISABLE_DEACTIVATION
-        this.body.setActivationState(4);
+        this.body.setActivationState(DISABLE_DEACTIVATION);
 
         this.world.addRigidBody(this.body);
 

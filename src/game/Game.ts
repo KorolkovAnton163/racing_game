@@ -18,6 +18,7 @@ import {AmmoPhysics} from "./physics/AmmoPhysics";
 import {Box} from "./models/Box";
 import {PointLight} from "./light/PointLight";
 import {Texture} from "./utils/Texture";
+import {DISABLE_DEACTIVATION, ISLAND_SLEEPING} from "./consts/physics";
 
 export class Game {
     public clock: THREE.Clock;
@@ -139,7 +140,7 @@ export class Game {
 
             //Графика
             this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRation(window.devicePixelRatio);
+            this.renderer.setPixelRation(1);
             this.renderer.enableShadowMap(true);
 
             this.camera.setPosition(-4.84, 4.39, -35.11);
@@ -187,9 +188,19 @@ export class Game {
             const nh = 6;
             for (let j = 0; j < nw; j++) {
                 for (let i = 0; i < nh; i++) {
-                    new Box(this.scene, this.physics, new THREE.Vector3(size * j - (size * (nw - 1)) / 2, size * i, 10), this.ZERO_QUATERNION, size, size, size, 100);
+                    new Box(
+                        this.scene,
+                        this.physics,
+                        new THREE.Vector3(size * j - (size * (nw - 1)) / 2, size * i, 10),
+                        this.ZERO_QUATERNION, size, size, size, 100, 1, DISABLE_DEACTIVATION);
                 }
             }
+
+            new Box(
+                this.scene,
+                this.physics,
+                new THREE.Vector3(0.0, 3.0, -18.0),
+                this.ZERO_QUATERNION, 0.1, 5.0, 0.1, 300, 1, ISLAND_SLEEPING);
 
             this.createTestMap();
 
