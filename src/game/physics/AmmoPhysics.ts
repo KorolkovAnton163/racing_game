@@ -57,7 +57,7 @@ export class AmmoPhysics {
         this.physics.vehicleRespawn(uuid);
     }
 
-    private onUpdate(updates: Record<string, number[]>): void {
+    private onUpdate(updates: Record<string, Float32Array>): void {
         for (let uuid in updates) {
             const o = this.objects.get(uuid);
 

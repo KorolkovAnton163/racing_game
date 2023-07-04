@@ -125,7 +125,7 @@ export class PhysicVehicle extends PhysicBody {
         this.vehicle.getChassisWorldTransform().setRotation(new Ammo.btQuaternion(0, q.y(),0, q.w()));
     }
 
-    public update(dt: number, updated: Record<string, number[]>): void {
+    public update(dt: number, updated: Record<string, Float32Array>): void {
         const speed = this.vehicle.getCurrentSpeedKmHour();
         const rs = Number(Math.abs(speed).toFixed(1));
 
@@ -199,10 +199,15 @@ export class PhysicVehicle extends PhysicBody {
         });
 
         //тормаз на колесах
-        this.vehicle.setBrake(this.breakingForce / 2, WHEEL_FRONT_LEFT);
-        this.vehicle.setBrake(this.breakingForce / 2, WHEEL_FRONT_RIGHT);
-        this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_LEFT);
-        this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_RIGHT);
+        if (this.actions.break) {
+            this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_LEFT);
+            this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_RIGHT);
+        } else {
+            this.vehicle.setBrake(this.breakingForce / 2, WHEEL_FRONT_LEFT);
+            this.vehicle.setBrake(this.breakingForce / 2, WHEEL_FRONT_RIGHT);
+            this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_LEFT);
+            this.vehicle.setBrake(this.breakingForce, WHEEL_BACK_RIGHT);
+        }
 
         //поворот колес
         this.vehicle.setSteeringValue(this.vehicleSteering, WHEEL_FRONT_LEFT);
@@ -229,6 +234,6 @@ export class PhysicVehicle extends PhysicBody {
 
         u.push(rs);
 
-        updated[this.uuid] = u;
+        updated[this.uuid] = new Float32Array(u);
     }
 }

@@ -19,6 +19,10 @@ import {Box} from "./models/Box";
 import {PointLight} from "./light/PointLight";
 import {Texture} from "./utils/Texture";
 import {DISABLE_DEACTIVATION, ISLAND_SLEEPING} from "./consts/physics";
+import {RenderPass} from "three/examples/jsm/postprocessing/RenderPass";
+import {ShaderPass} from "three/examples/jsm/postprocessing/ShaderPass";
+import {FXAAShader} from "three/examples/jsm/shaders/FXAAShader";
+import {EffectComposer} from "three/examples/jsm/postprocessing/EffectComposer";
 
 export class Game {
     public clock: THREE.Clock;
@@ -139,6 +143,7 @@ export class Game {
             this.timeNextSpawn = this.time + this.objectTimePeriod;
 
             //Графика
+            this.renderer.initEffects(this.scene, this.camera);
             this.renderer.setSize(window.innerWidth, window.innerHeight);
             this.renderer.setPixelRation(1);
             this.renderer.enableShadowMap(true);
@@ -247,7 +252,7 @@ export class Game {
 
         this.sky.update(this.sun);
 
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render();
 
         requestAnimationFrame(() => {
             this.loop();

@@ -1,5 +1,5 @@
 export interface IGameObject {
     uuid(): string;
 
-    update(updates: number[]): void;
+    update(updates: Float32Array): void;
 }

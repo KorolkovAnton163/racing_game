@@ -187,7 +187,7 @@ export abstract class Car implements IGameObject {
         this.createWheel(model.wheels.br, WHEEL_BACK_RIGHT);
     }
 
-    public update(updates: number[]): void {
+    public update(updates: Float32Array): void {
         this.mesh.position.set(updates[0], updates[1], updates[2]);
         this.mesh.quaternion.set(updates[3], updates[4], updates[5], updates[6]);
 

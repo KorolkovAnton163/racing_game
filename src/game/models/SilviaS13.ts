@@ -16,23 +16,23 @@ export class SilviaS13 extends Car {
     protected chassisLength = 1.95;
     protected massVehicle = 1160;
 
-    protected wheelWidthFront = 0.1;
+    protected wheelWidthFront = 0.07;
     protected wheelAxisPositionFront = 0.57;
-    protected wheelRadiusFront = 0.125;
+    protected wheelRadiusFront = 0.142;
     protected wheelHalfTrackFront = 0.35;
     protected wheelAxisHeightFront = 0.17;
 
     protected wheelWidthBack = 0.1;
     protected wheelAxisPositionBack = -0.53;
-    protected wheelRadiusBack = 0.125;
+    protected wheelRadiusBack = 0.142;
     protected wheelHalfTrackBack = 0.35;
-    protected wheelAxisHeightBack = 0.12;
+    protected wheelAxisHeightBack = 0.17;
 
     protected friction = 4;
-    protected suspensionStiffness = 20.0;
+    protected suspensionStiffness = 16.0;
     protected suspensionDamping = 7.0;
     protected suspensionCompression = 4.4;
-    protected suspensionRestLength = 0.4;
+    protected suspensionRestLength = 0.45;
     protected rollInfluence = 0.12;
 
     protected steeringClamp = 0.7

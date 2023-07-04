@@ -21,13 +21,13 @@ export class Evo6 extends Car {
     protected chassisLength = 1.7;
     protected massVehicle = 1360;
 
-    protected wheelWidthFront = 0.1;
+    protected wheelWidthFront = 0.05;
     protected wheelAxisPositionFront = 0.5;
     protected wheelRadiusFront = 0.125;
     protected wheelHalfTrackFront = 0.32;
     protected wheelAxisHeightFront = 0.1;
 
-    protected wheelWidthBack = 0.1;
+    protected wheelWidthBack = 0.05;
     protected wheelAxisPositionBack = -0.5;
     protected wheelRadiusBack = 0.125;
     protected wheelHalfTrackBack = 0.32;

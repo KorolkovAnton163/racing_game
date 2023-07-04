@@ -46,7 +46,7 @@ export class PhysicBox extends PhysicBody {
         this.world.addRigidBody(this.body);
     }
 
-    public update(dt: number, updated: Record<string, number[]>): void {
+    public update(dt: number, updated: Record<string, Float32Array>): void {
         if (this.static) {
             return;
         }
@@ -58,7 +58,7 @@ export class PhysicBox extends PhysicBody {
             const p = this.aux.getOrigin();
             const q = this.aux.getRotation();
 
-            updated[this.uuid] = [p.x(), p.y(), p.z(), q.x(), q.y(), q.z(), q.w()];
+            updated[this.uuid] = new Float32Array([p.x(), p.y(), p.z(), q.x(), q.y(), q.z(), q.w()]);
         }
     }
 }

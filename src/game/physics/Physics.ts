@@ -30,8 +30,8 @@ export class Physics {
         this.world.setGravity(new Ammo.btVector3( 0, -9.82, 0 ));
     }
 
-    public update(delta: number): Record<string, number[]> {
-        const updates: Record<string, number[]> = {};
+    public update(delta: number): Record<string, Float32Array> {
+        const updates: Record<string, Float32Array> = {};
         const dt = delta / 1000;
 
         this.world.stepSimulation(dt, 5, 1 / 60);
