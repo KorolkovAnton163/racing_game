@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {Scene} from "../Scene";
 import {AmmoPhysics} from "../physics/AmmoPhysics";
 import {IGameObject} from "../interfaces/IGameObject";
+import {Texture} from "../utils/Texture";
 
 export class Box implements IGameObject {
     private scene: Scene;
@@ -28,6 +29,14 @@ export class Box implements IGameObject {
     ) {
         const material = mass > 0 ? this.materialDynamic : this.materialStatic;
         const shape = new THREE.BoxGeometry(w, l, h, 1, 1, 1);
+
+        if (mass === 0) {
+            material.map = Texture.load('/assets/grid.png', {
+                x: 80,
+                y: 80,
+            });
+            material.needsUpdate = true;
+        }
 
         this.scene = scene;
         this.physics = physics;

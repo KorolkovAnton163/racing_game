@@ -49,6 +49,10 @@ export class Renderer {
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
 
+    public getRender(): THREE.WebGLRenderer {
+        return this.renderer;
+    }
+
     public getElement(): HTMLCanvasElement {
         return this.renderer.domElement;
     }

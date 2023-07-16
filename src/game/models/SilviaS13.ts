@@ -1,6 +1,7 @@
 import {Car} from "./Car";
 import {WHEEL_BACK_LEFT, WHEEL_BACK_RIGHT} from "../interfaces/physic/IVehicleData";
 import {MaterialType} from "../utils/Materials";
+import * as THREE from "three";
 
 export class SilviaS13 extends Car {
     protected MAX_ENGINE_FORCE = 3000;
@@ -44,30 +45,33 @@ export class SilviaS13 extends Car {
 
     protected forceWheels = [WHEEL_BACK_LEFT, WHEEL_BACK_RIGHT];
 
-    protected materials = {
-        'Paint': {
-            type: MaterialType.PhysicalMetal,
-            color: 0xCB9F63,
-        },
-        'Windows': {
-            type: MaterialType.StandardGlass,
-            color: 0x000000,
-            params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.7, }
-        },
-        'White Lights': {
-            type: MaterialType.StandardGlass,
-            color: 0xffffff,
-            params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.3, }
-        },
-        'Orange Lights': {
-            type: MaterialType.StandardGlass,
-            color: 0xFF7E00,
-            params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.3, }
-        },
-        'Red Lights': {
-            type: MaterialType.StandardGlass,
-            color: 0x5d1818,
-            params: { envMap:  this.cubeTexture, }
-        }
+    protected get materials(): Record<string, { type: MaterialType, color: number, params?: Record<string, any> }> {
+        return {
+            'Paint': {
+                type: MaterialType.StandardMetal,
+                color: 0xCB9F63,
+                params: { envMap: this.cubeTexture, roughness: 0.05, metalness: 0.5 }
+            },
+            'Windows': {
+                type: MaterialType.StandardGlass,
+                color: 0x000000,
+                params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.7, }
+            },
+            'White Lights': {
+                type: MaterialType.StandardGlass,
+                color: 0xffffff,
+                params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.3, }
+            },
+            'Orange Lights': {
+                type: MaterialType.StandardGlass,
+                color: 0xFF7E00,
+                params: { envMap:  this.cubeTexture, transparent: true, opacity: 0.3, }
+            },
+            'Red Lights': {
+                type: MaterialType.StandardGlass,
+                color: 0x5d1818,
+                params: { envMap:  this.cubeTexture, }
+            }
+        };
     }
 }

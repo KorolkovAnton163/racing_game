@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as Comlink from 'comlink'
 import {Physics} from "./Physics";
 import {IPhysicBoxData} from "../interfaces/physic/IPhysicBoxData";
@@ -57,11 +56,9 @@ export class AmmoPhysics {
         this.physics.vehicleRespawn(uuid);
     }
 
-    private onUpdate(updates: Record<string, Float32Array>): void {
-        for (let uuid in updates) {
-            const o = this.objects.get(uuid);
-
-            o.update(updates[uuid]);
-        }
+    private onUpdate(updates: Map<string, Float32Array>): void {
+        updates.forEach((value: Float32Array, uuid: string) => {
+            this.objects.get(uuid).update(value);
+        });
     }
 }

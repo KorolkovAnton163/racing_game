@@ -1,3 +1,7 @@
 export abstract class PhysicBody {
-    public abstract update(dt: number, updated: Record<string, Float32Array>): void;
+    public uuid: string = '';
+
+    public static: boolean = false;
+
+    public abstract update(dt: number): Float32Array;
 }

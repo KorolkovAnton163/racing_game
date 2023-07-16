@@ -19,6 +19,8 @@ export class Physics {
 
     private bodies: Map<string, PhysicBody> = new Map();
 
+    private updates: Map<string, Float32Array> = new Map();
+
     constructor() {
         this.TRANSFORM_AUX = new Ammo.btTransform();
 
@@ -30,17 +32,20 @@ export class Physics {
         this.world.setGravity(new Ammo.btVector3( 0, -9.82, 0 ));
     }
 
-    public update(delta: number): Record<string, Float32Array> {
-        const updates: Record<string, Float32Array> = {};
+    public update(delta: number): Map<string, Float32Array> {
         const dt = delta / 1000;
 
         this.world.stepSimulation(dt, 5, 1 / 60);
 
         this.bodies.forEach((b: PhysicBody) => {
-            b.update(dt, updates);
+            if (b.static) {
+                return;
+            }
+
+            this.updates.set(b.uuid, b.update(dt));
         });
 
-        return updates
+        return this.updates;
     }
 
     public addBox(uuid: string, data: IPhysicBoxData): void {

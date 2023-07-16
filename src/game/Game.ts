@@ -19,10 +19,7 @@ import {Box} from "./models/Box";
 import {PointLight} from "./light/PointLight";
 import {Texture} from "./utils/Texture";
 import {DISABLE_DEACTIVATION, ISLAND_SLEEPING} from "./consts/physics";
-import {RenderPass} from "three/examples/jsm/postprocessing/RenderPass";
-import {ShaderPass} from "three/examples/jsm/postprocessing/ShaderPass";
-import {FXAAShader} from "three/examples/jsm/shaders/FXAAShader";
-import {EffectComposer} from "three/examples/jsm/postprocessing/EffectComposer";
+import {ReflectionCamera} from "./reflection/ReflectionCamera";
 
 export class Game {
     public clock: THREE.Clock;
@@ -44,6 +41,8 @@ export class Game {
     public sky: Sky;
 
     public physics: AmmoPhysics;
+
+    public reflectionCamera: ReflectionCamera;
 
     private time: number = 0;
 
@@ -68,6 +67,7 @@ export class Game {
         this.hLight = new HemisphereLight();
         this.pLight = new PointLight();
         this.sky = new Sky();
+        this.reflectionCamera = new ReflectionCamera();
 
         this.physics = new AmmoPhysics(new Worker('physics.worker.js'));
 
@@ -161,6 +161,8 @@ export class Game {
             this.sky.setScalar(2000);
             this.scene.addObject(this.sky.getMesh());
 
+            this.scene.addObject(this.reflectionCamera.getCamera());
+
             //Статические объекты
             new Box(this.scene, this.physics, new THREE.Vector3(0.0, 0.0, 0.0), this.ZERO_QUATERNION, 128, 1, 128, 0, 2);
             new Box(this.scene, this.physics, new THREE.Vector3(0.0, 0.0, 128.0), this.ZERO_QUATERNION, 128, 1, 128, 0, 2);
@@ -251,6 +253,8 @@ export class Game {
         this.sun.update(this.camera);
 
         this.sky.update(this.sun);
+
+        this.reflectionCamera.update(this.renderer, this.scene);
 
         this.renderer.render();
 

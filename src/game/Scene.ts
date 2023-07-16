@@ -10,8 +10,6 @@ export class Scene {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xa8def0);
         this.scene.fog = new THREE.Fog(this.scene.background, 1, 5000);
-        this.scene.environment = new RGBELoader().load( '/assets/venice_sunset_1k.hdr' );
-        this.scene.environment.mapping = THREE.EquirectangularReflectionMapping;
     }
 
     public getScene(): THREE.Scene {

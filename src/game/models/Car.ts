@@ -58,27 +58,27 @@ export abstract class Car implements IGameObject {
 
     protected abstract forceWheels: number[];
 
-    protected abstract materials: Record<string, { type: MaterialType, color: number, params?: THREE.MeshStandardMaterialParameters }>;
+    protected abstract get materials(): Record<string, { type: MaterialType, color: number, params?: Record<string, any> }>;
 
     private readonly ZERO_QUATERNION: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
 
-    private scene: Scene;
+    protected scene: Scene;
 
-    private camera: Camera;
+    protected camera: Camera;
 
-    private physics: AmmoPhysics;
+    protected physics: AmmoPhysics;
 
-    private position: THREE.Vector3;
+    protected position: THREE.Vector3;
 
-    private mesh: THREE.Object3D;
+    protected mesh: THREE.Object3D;
 
-    private wheelMeshes: THREE.Object3D[] = [];
+    protected wheelMeshes: THREE.Object3D[] = [];
 
-    private debugMesh: THREE.Object3D;
+    protected debugMesh: THREE.Object3D;
 
-    private debugWheelMeshes: THREE.Object3D[] = [];
+    protected debugWheelMeshes: THREE.Object3D[] = [];
 
-    private speedKmHour = 0;
+    protected speedKmHour = 0;
 
     protected cubeTexture: THREE.CubeTexture;
 

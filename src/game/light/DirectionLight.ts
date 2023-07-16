@@ -15,7 +15,7 @@ export class DirectionLight implements ILight {
     }
 
     constructor() {
-        this.light = new THREE.DirectionalLight(0xFFFFFF, 1);
+        this.light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
 
         this.light.color.setHSL(0.1, 1, 0.95);
         this.light.position.multiplyScalar(30);
@@ -59,7 +59,7 @@ export class DirectionLight implements ILight {
         const phi = THREE.MathUtils.degToRad(90 - elevation);
         const theta = THREE.MathUtils.degToRad(azimuth);
 
-        this.light.position.setFromSphericalCoords( 100, phi, theta);
+        this.light.position.setFromSphericalCoords( 300, phi, theta);
     }
 
     public update(camera: Camera): void {

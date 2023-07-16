@@ -35,6 +35,10 @@ export class Camera {
         return this.camera.quaternion;
     }
 
+    public get position(): THREE.Vector3 {
+        return this.camera.position;
+    }
+
     constructor() {
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.05, 1000);
     }

@@ -9,8 +9,6 @@ import {
 import {DISABLE_DEACTIVATION} from "../../consts/physics";
 
 export class PhysicVehicle extends PhysicBody {
-    protected uuid: string;
-
     private world: Ammo.btDiscreteDynamicsWorld;
 
     private data: IVehicleData;
@@ -34,6 +32,18 @@ export class PhysicVehicle extends PhysicBody {
     private readonly wheelDirectionCS0 = new Ammo.btVector3(0, -1, 0);
 
     private readonly wheelAxleCS = new Ammo.btVector3(-1, 0, 0);
+
+    private updates = new Float32Array([
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+    ]);
 
     private steeringIncrement = 0.02; //скорость поворота колес //0.04
     private engineForce = 0; //можно ограничивать и регулировать набор скорости
@@ -125,7 +135,7 @@ export class PhysicVehicle extends PhysicBody {
         this.vehicle.getChassisWorldTransform().setRotation(new Ammo.btQuaternion(0, q.y(),0, q.w()));
     }
 
-    public update(dt: number, updated: Record<string, Float32Array>): void {
+    public update(dt: number): Float32Array {
         const speed = this.vehicle.getCurrentSpeedKmHour();
         const rs = Number(Math.abs(speed).toFixed(1));
 
@@ -213,27 +223,72 @@ export class PhysicVehicle extends PhysicBody {
         this.vehicle.setSteeringValue(this.vehicleSteering, WHEEL_FRONT_LEFT);
         this.vehicle.setSteeringValue(this.vehicleSteering, WHEEL_FRONT_RIGHT);
 
-        const u: number[] = [];
+        const tm = this.vehicle.getChassisWorldTransform();
+        const p = tm.getOrigin();
+        const q = tm.getRotation();
 
-        let tm, p, q, tw, pw, qw;
+        this.updates[0] = p.x();
+        this.updates[1] = p.y();
+        this.updates[2] = p.z();
+        this.updates[3] = q.x();
+        this.updates[4] = q.y();
+        this.updates[5] = q.z();
+        this.updates[6] = q.w();
 
-        tm = this.vehicle.getChassisWorldTransform();
-        p = tm.getOrigin();
-        q = tm.getRotation();
+        const wt1 = this.updateWheelTransform(WHEEL_FRONT_LEFT);
 
-        u.push(p.x(), p.y(), p.z(), q.x(), q.y(), q.z(), q.w());
+        this.updates[7] = wt1[0];
+        this.updates[8] = wt1[1];
+        this.updates[9] = wt1[2];
+        this.updates[10] = wt1[3];
+        this.updates[11] = wt1[4];
+        this.updates[12] = wt1[5];
+        this.updates[13] = wt1[6];
 
-        for (let i = 0; i < this.vehicle.getNumWheels(); i++) {
-            this.vehicle.updateWheelTransform(i, false);
-            tw = this.vehicle.getWheelTransformWS(i);
-            pw = tw.getOrigin();
-            qw = tw.getRotation();
+        const wt2 = this.updateWheelTransform(WHEEL_FRONT_RIGHT);
 
-            u.push(pw.x(), pw.y(), pw.z(), qw.x(), qw.y(), qw.z(), qw.w());
-        }
+        this.updates[14] = wt2[0];
+        this.updates[15] = wt2[1];
+        this.updates[16] = wt2[2];
+        this.updates[17] = wt2[3];
+        this.updates[18] = wt2[4];
+        this.updates[19] = wt2[5];
+        this.updates[20] = wt2[6];
 
-        u.push(rs);
+        const wt3 = this.updateWheelTransform(WHEEL_BACK_LEFT);
 
-        updated[this.uuid] = new Float32Array(u);
+        this.updates[21] = wt3[0];
+        this.updates[22] = wt3[1];
+        this.updates[23] = wt3[2];
+        this.updates[24] = wt3[3];
+        this.updates[25] = wt3[4];
+        this.updates[26] = wt3[5];
+        this.updates[27] = wt3[6];
+
+        const wt4 = this.updateWheelTransform(WHEEL_BACK_RIGHT);
+
+        this.updates[28] = wt4[0];
+        this.updates[29] = wt4[1];
+        this.updates[30] = wt4[2];
+        this.updates[31] = wt4[3];
+        this.updates[32] = wt4[4];
+        this.updates[33] = wt4[5];
+        this.updates[34] = wt4[6];
+
+        this.updates[35] = rs;
+
+        return this.updates;
+    }
+
+    private updateWheelTransform(i: number): Float32Array {
+        this.vehicle.updateWheelTransform(i, false);
+        const tw = this.vehicle.getWheelTransformWS(i);
+        const pw = tw.getOrigin();
+        const qw = tw.getRotation();
+
+        return new Float32Array([
+            pw.x(), pw.y(), pw.z(),
+            qw.x(), qw.y(), qw.z(), qw.w(),
+        ]);
     }
 }

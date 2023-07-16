@@ -1,6 +1,5 @@
 import {PhysicBody} from "./PhysicBody";
 import {IPhysicBoxData} from "../../interfaces/physic/IPhysicBoxData";
-import {ISLAND_SLEEPING} from "../../consts/physics";
 
 export class PhysicBox extends PhysicBody {
     private world: Ammo.btDiscreteDynamicsWorld;
@@ -9,9 +8,10 @@ export class PhysicBox extends PhysicBody {
 
     private body: Ammo.btRigidBody;
 
-    private static: boolean;
-
-    private uuid: string;
+    private updates = new Float32Array([
+        0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,
+    ]);
 
     constructor(uuid: string, world: Ammo.btDiscreteDynamicsWorld, aux: Ammo.btTransform, data: IPhysicBoxData) {
         super();
@@ -46,9 +46,9 @@ export class PhysicBox extends PhysicBody {
         this.world.addRigidBody(this.body);
     }
 
-    public update(dt: number, updated: Record<string, Float32Array>): void {
+    public update(dt: number): Float32Array {
         if (this.static) {
-            return;
+            return this.updates;
         }
 
         const ms = this.body.getMotionState();
@@ -58,7 +58,15 @@ export class PhysicBox extends PhysicBody {
             const p = this.aux.getOrigin();
             const q = this.aux.getRotation();
 
-            updated[this.uuid] = new Float32Array([p.x(), p.y(), p.z(), q.x(), q.y(), q.z(), q.w()]);
+            this.updates[0] = p.x();
+            this.updates[1] = p.y();
+            this.updates[2] = p.z();
+            this.updates[3] = q.x();
+            this.updates[4] = q.y();
+            this.updates[5] = q.z();
+            this.updates[6] = q.w();
         }
+
+        return this.updates;
     }
 }
