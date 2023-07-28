@@ -40,6 +40,9 @@ export class DebugController {
         this.scene.addObject(this.lines.getMesh());
         this.scene.addObject(this.shadowCamera);
 
+        this.stats.dom.style.left = 'auto';
+        this.stats.dom.style.right = '0px';
+
         document.body.appendChild(this.stats.dom);
 
         // const debugVertices = new Float32Array(DefaultBufferSize);

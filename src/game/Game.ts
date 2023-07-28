@@ -20,6 +20,8 @@ import {PointLight} from "./light/PointLight";
 import {Texture} from "./utils/Texture";
 import {DISABLE_DEACTIVATION, ISLAND_SLEEPING} from "./consts/physics";
 import {ReflectionCamera} from "./reflection/ReflectionCamera";
+import {Buildings} from "./consts/buildings";
+import {Clouds} from "./models/Clouds";
 
 export class Game {
     public clock: THREE.Clock;
@@ -40,23 +42,26 @@ export class Game {
 
     public sky: Sky;
 
+    public clouds: Clouds;
+
     public physics: AmmoPhysics;
 
     public reflectionCamera: ReflectionCamera;
-
-    private time: number = 0;
-
-    private objectTimePeriod: number = 3;
-
-    private timeNextSpawn: number = 0;
 
     private readonly ZERO_QUATERNION: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
 
     private models: Record<string, ICarModel> = {};
 
+    private buildings: Map<string, THREE.Object3D> = new Map();
+
     private debugController: DebugController;
 
     private playerController: PlayerController;
+
+    private textures: { cube: THREE.CubeTexture, cloud: THREE.Texture } = {
+        cube: new THREE.CubeTexture(),
+        cloud: new THREE.Texture(),
+    };
 
     constructor() {
         this.scene = new Scene();
@@ -67,6 +72,7 @@ export class Game {
         this.hLight = new HemisphereLight();
         this.pLight = new PointLight();
         this.sky = new Sky();
+        this.clouds = new Clouds();
         this.reflectionCamera = new ReflectionCamera();
 
         this.physics = new AmmoPhysics(new Worker('physics.worker.js'));
@@ -81,8 +87,6 @@ export class Game {
         });
     }
 
-    private cubeTexture: THREE.CubeTexture;
-
     private async loadData(): Promise<void> {
         for (const car in Cars) {
             this.models[car] = {
@@ -96,31 +100,20 @@ export class Game {
             };
         }
 
-        this.cubeTexture = await Texture.loadCube([
+        for (const building in Buildings) {
+            this.buildings.set(building, await Loader.loadModel(`${Buildings[building]}`));
+        }
+
+        this.textures.cube = await Texture.loadCube([
             'assets/px.png', 'assets/nx.png',
             'assets/px.png', 'assets/ny.png',
             'assets/pz.png', 'assets/nz.png',
         ]);
+
+        this.textures.cloud = await Texture.load('assets/cloud.png');
     }
 
     private createTestMap(): void {
-        // const g = new THREE.PlaneGeometry(300, 300, 1, 1);
-        //
-        // const m = new THREE.MeshStandardMaterial({
-        //     map: Texture.load(`/assets/map.png`),
-        //     roughness: 0.6
-        // });
-        //
-        // const mesh = new THREE.Mesh(g, m);
-        //
-        // mesh.rotateX(- Math.PI / 2);
-        // mesh.rotateZ(0.35);
-        // mesh.receiveShadow = true;
-        // mesh.castShadow = true;
-        // mesh.position.y = -0.51;
-        //
-        // this.scene.addObject(mesh);
-
         [
             [14.0, 10.0, -4.0, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 55.0, 0.0, 0.0],
             [31.0, 10.0, 19.0, 0.0, 0.0, 0.0, 1.0, 25.0, 20.0, 9.0, 0.0, 0.0],
@@ -140,8 +133,6 @@ export class Game {
         return this.physics.init().then(async () => {
             await this.loadData();
 
-            this.timeNextSpawn = this.time + this.objectTimePeriod;
-
             //Графика
             this.renderer.initEffects(this.scene, this.camera);
             this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -160,6 +151,9 @@ export class Game {
 
             this.sky.setScalar(2000);
             this.scene.addObject(this.sky.getMesh());
+
+            this.clouds.init(this.textures.cloud);
+            this.scene.addObject(this.clouds.mesh);
 
             this.scene.addObject(this.reflectionCamera.getCamera());
 
@@ -214,15 +208,15 @@ export class Game {
             //Машины
             const rx7 = new Rx7(this.scene, this.camera, this.physics, new THREE.Vector3(2, 1, -20));
 
-            rx7.init(this.models['rx_7'], this.cubeTexture);
+            rx7.init(this.models['rx_7'], this.textures.cube);
 
             const savana = new Savana(this.scene, this.camera, this.physics, new THREE.Vector3(3, 1, -20));
 
-            savana.init(this.models['savana'], this.cubeTexture);
+            savana.init(this.models['savana'], this.textures.cube);
 
             const s13 = new SilviaS13(this.scene, this.camera, this.physics, new THREE.Vector3(1, 1, -20));
 
-            s13.init(this.models['silvia_s13'], this.cubeTexture);
+            s13.init(this.models['silvia_s13'], this.textures.cube);
 
             this.playerController = new PlayerController(
                 this.models['evo_6'],
@@ -230,7 +224,7 @@ export class Game {
                 this.renderer,
                 this.camera,
                 this.physics,
-                this.cubeTexture,
+                this.textures.cube,
             );
 
             document.getElementById('canvas').appendChild(this.renderer.getElement());
@@ -253,6 +247,8 @@ export class Game {
         this.sun.update(this.camera);
 
         this.sky.update(this.sun);
+
+        this.clouds.update(delta);
 
         this.reflectionCamera.update(this.renderer, this.scene);
 
