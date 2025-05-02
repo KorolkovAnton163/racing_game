@@ -4,11 +4,11 @@ import {MaterialType} from "../utils/Materials";
 import * as THREE from "three";
 
 export class Rx7 extends Car {
-    protected MAX_ENGINE_FORCE = 2000;
+    protected MAX_ENGINE_FORCE = 3500;
 
-    protected MAX_BREAKING_FORCE = 100;
+    protected MAX_BREAKING_FORCE = 250;
 
-    protected TRANSMISSION_FORCE = 500;
+    protected TRANSMISSION_FORCE = 750;
 
     protected TRANSMISSION_BREAKING_FORCE = 2;
 
@@ -17,13 +17,13 @@ export class Rx7 extends Car {
     protected chassisLength = 1.8;
     protected massVehicle = 1191;
 
-    protected wheelWidthFront = 0.1;
+    protected wheelWidthFront = 0.036;
     protected wheelAxisPositionFront = 0.59;
     protected wheelRadiusFront = 0.125;
     protected wheelHalfTrackFront = 0.35;
     protected wheelAxisHeightFront = 0.17;
 
-    protected wheelWidthBack = 0.1;
+    protected wheelWidthBack = 0.036;
     protected wheelAxisPositionBack = -0.44;
     protected wheelRadiusBack = 0.125;
     protected wheelHalfTrackBack = 0.35;

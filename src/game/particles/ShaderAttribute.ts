@@ -49,11 +49,19 @@ export class ShaderAttribute {
      * updating. Also marks the attribute as needing an update.
      */
     public flagUpdate(): void {
-        const attr = this.bufferAttribute;
-        const range = attr.updateRange;
+        if (!this.bufferAttribute) return;
 
-        range.offset = this.updateMin;
-        range.count = Math.min( (this.updateMax - this.updateMin ) + this.componentSize, this.typedArray.array.length);
+        const attr = this.bufferAttribute;
+        // const range = attr.updateRange;
+        //
+        // range.offset = this.updateMin;
+        // range.count = Math.min( (this.updateMax - this.updateMin ) + this.componentSize, this.typedArray.array.length);
+
+        attr.updateRanges = [{
+            start: this.updateMin,
+            count: Math.min( (this.updateMax - this.updateMin ) + this.componentSize, this.typedArray.array.length),
+        }];
+
         attr.needsUpdate = true;
     };
 
@@ -84,8 +92,12 @@ export class ShaderAttribute {
 
     public forceUpdateAll(): void {
         this.bufferAttribute.array = this.typedArray.array;
-        this.bufferAttribute.updateRange.offset = 0;
-        this.bufferAttribute.updateRange.count = -1;
+        this.bufferAttribute.updateRanges.forEach((range) => {
+            range.start = 0;
+            range.count = -1;
+        })
+        // this.bufferAttribute.updateRanges[0].start = 0;
+        // this.bufferAttribute.updateRanges[0].count = -1;
 
         this.bufferAttribute.usage = THREE.StaticDrawUsage;
         this.bufferAttribute.needsUpdate = true;
@@ -127,7 +139,7 @@ export class ShaderAttribute {
         // Don't create it if it already exists, but do
         // flag that it needs updating on the next render
         // cycle.
-        if ( this.bufferAttribute !== null ) {
+        if (this.bufferAttribute !== null) {
             this.bufferAttribute.array = this.typedArray.array;
 
             // Since THREE.js version 81, dynamic count calculation was removed
@@ -136,10 +148,12 @@ export class ShaderAttribute {
             // In the next minor release, I may well remove this check and force
             // dependency on THREE r81+.
             if (parseFloat(THREE.REVISION) >= 81) {
-                this.bufferAttribute.count = this.bufferAttribute.array.length / this.bufferAttribute.itemSize;
+                // TODO: Что-то не так с новой версией THREE
+                // this.bufferAttribute.count = this.bufferAttribute.array.length / this.bufferAttribute.itemSize;
             }
 
             this.bufferAttribute.needsUpdate = true;
+
             return;
         }
 

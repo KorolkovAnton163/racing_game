@@ -16,6 +16,7 @@ export class ReflectionCamera {
     constructor() {
         this.target = new THREE.WebGLCubeRenderTarget(this.TARGET_SIZE, {
             generateMipmaps: true,
+            format: THREE.RGBAFormat,
             minFilter: THREE.LinearMipmapLinearFilter,
             type: THREE.HalfFloatType,
         });

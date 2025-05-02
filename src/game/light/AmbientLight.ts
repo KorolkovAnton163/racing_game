@@ -6,7 +6,7 @@ export class AmbientLight implements ILight {
     protected light: THREE.AmbientLight;
 
     constructor() {
-        this.light = new THREE.AmbientLight(0xFFFFFF, 0.4);
+        this.light = new THREE.AmbientLight(0xFFFFFF, 1.0);
     }
 
     public getLight(): THREE.AmbientLight {

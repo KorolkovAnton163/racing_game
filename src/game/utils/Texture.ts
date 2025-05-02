@@ -5,6 +5,7 @@ export class Texture {
         const texture = new THREE.TextureLoader().load(path);
 
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.flipY = false;
 
         if (repeat) {
             texture.repeat.x = repeat.x;

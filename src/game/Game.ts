@@ -22,6 +22,11 @@ import {DISABLE_DEACTIVATION, ISLAND_SLEEPING} from "./consts/physics";
 import {ReflectionCamera} from "./reflection/ReflectionCamera";
 import {Buildings} from "./consts/buildings";
 import {Clouds} from "./models/Clouds";
+import {Sun} from "./models/Sun";
+import {CSM} from 'three/examples/jsm/csm/CSM';
+import { CSMHelper } from 'three/examples/jsm/csm/CSMHelper';
+import Building from "./models/Building";
+import { IModel } from "./interfaces/IModel";
 
 export class Game {
     public clock: THREE.Clock;
@@ -32,13 +37,15 @@ export class Game {
 
     public renderer: Renderer;
 
-    public sun: DirectionLight;
+    // public sun: DirectionLight;
 
     public aLight: AmbientLight;
 
     public hLight: HemisphereLight;
 
     public pLight: PointLight;
+
+    public sun: Sun;
 
     public sky: Sky;
 
@@ -52,7 +59,7 @@ export class Game {
 
     private models: Record<string, ICarModel> = {};
 
-    private buildings: Map<string, THREE.Object3D> = new Map();
+    private buildings: Map<string, IModel> = new Map();
 
     private debugController: DebugController;
 
@@ -63,11 +70,15 @@ export class Game {
         cloud: new THREE.Texture(),
     };
 
+    private modelTextures: Map<string, THREE.Texture> = new Map<string, THREE.Texture>();
+
+    private csm: CSM;
+
     constructor() {
         this.scene = new Scene();
         this.camera = new Camera();
         this.renderer = new Renderer();
-        this.sun = new DirectionLight();
+        this.sun = new Sun();
         this.aLight = new AmbientLight();
         this.hLight = new HemisphereLight();
         this.pLight = new PointLight();
@@ -101,7 +112,9 @@ export class Game {
         }
 
         for (const building in Buildings) {
-            this.buildings.set(building, await Loader.loadModel(`${Buildings[building]}`));
+            this.buildings.set(building, {
+                body: await Loader.loadModel(`${Buildings[building].path}`),
+            });
         }
 
         this.textures.cube = await Texture.loadCube([
@@ -111,21 +124,32 @@ export class Game {
         ]);
 
         this.textures.cloud = await Texture.load('assets/cloud.png');
+
+        for (let i = 1; i <= 96; i++) {
+            this.modelTextures.set(`Image_${i}`, await Texture.load(`assets/textures/Image_${i}.jpg`));
+        }
+
+        // this.modelTextures.set('clouds_top', await Texture.load('assets/clouds_top.ktx2'));
+        this.modelTextures.set('clouds_top', await Texture.load('assets/clouds_top-highq.ktx2'));
     }
 
     private createTestMap(): void {
         [
-            [14.0, 10.0, -4.0, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 55.0, 0.0, 0.0],
-            [31.0, 10.0, 19.0, 0.0, 0.0, 0.0, 1.0, 25.0, 20.0, 9.0, 0.0, 0.0],
-            [-14.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0, 9.0, 18.0, 39.0, 0.0, 0.0],
-            [14.6, 10.0, 68.5, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 40.0, 0.0, 0.0],
-            [26.0, 10.0, 44.6, 0.0, 0.0, 0.0, 1.0, 32.0, 20.0, 9.0, 0.0, 0.0],
-            [59.0, 6.0, 77.0, 0.0, 0.0, 0.0, 1.0, 9.0, 12.0, 38.0, 0.0, 0.0],
+            // [14.0, 10.0, -4.0, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 55.0, 0.0, 0.0],
+            // [31.0, 10.0, 19.0, 0.0, 0.0, 0.0, 1.0, 25.0, 20.0, 9.0, 0.0, 0.0],
+            // [-14.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0, 9.0, 18.0, 39.0, 0.0, 0.0],
+            // [14.6, 10.0, 68.5, 0.0, 0.0, 0.0, 1.0, 9.0, 20.0, 40.0, 0.0, 0.0],
+            // [26.0, 10.0, 44.6, 0.0, 0.0, 0.0, 1.0, 32.0, 20.0, 9.0, 0.0, 0.0],
+            // [59.0, 6.0, 77.0, 0.0, 0.0, 0.0, 1.0, 9.0, 12.0, 38.0, 0.0, 0.0],
         ].forEach((box: number[]) => {
             new Box(this.scene, this.physics,
                 new THREE.Vector3(box[0], box[1], box[2]),
                 new THREE.Quaternion(box[3], box[4], box[5], box[6]),
                 box[7], box[8], box[9], box[10], box[11]);
+        });
+
+        this.buildings.forEach((building, key) => {
+            new Building(this.scene, building, Buildings[key].dimensions, this.modelTextures);
         });
     }
 
@@ -133,29 +157,42 @@ export class Game {
         return this.physics.init().then(async () => {
             await this.loadData();
 
-            //Графика
-            this.renderer.initEffects(this.scene, this.camera);
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.renderer.setPixelRation(1);
-            this.renderer.enableShadowMap(true);
-
             this.camera.setPosition(-4.84, 4.39, -35.11);
-
             this.hLight.setPosition(0, 50, 0);
-            this.sun.setFromSphericalCoords(45.0, 180);
+            this.sun.init(this.scene);
             this.scene.addLight(this.hLight);
-            this.scene.addLight(this.sun);
-            this.scene.addObject(this.sun.getTarget());
-            this.scene.addObject(this.sun.getHelper());
             this.scene.addObject(this.hLight.getHelper());
 
             this.sky.setScalar(2000);
             this.scene.addObject(this.sky.getMesh());
 
+            //Графика
+            this.renderer.setupPostprocessing(this.scene, this.camera, this.sky);
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRation(1);
+            this.renderer.enableShadowMap(true);
+
+            // this.sun.setFromSphericalCoords(45.0, 180);
+            // this.scene.addLight(this.sun);
+            // this.scene.addObject(this.sun.getTarget());
+            // this.scene.addObject(this.sun.getHelper());
+
             this.clouds.init(this.textures.cloud);
             this.scene.addObject(this.clouds.mesh);
 
-            this.scene.addObject(this.reflectionCamera.getCamera());
+            // this.csm = new CSM({
+            //     maxFar: 3500.0,
+            //     cascades: 4,
+            //     mode: 'practical',
+            //     parent: this.scene.getScene(),
+            //     shadowMapSize: 2048,
+            //     lightDirection: new THREE.Vector3(-1, -1, -1).normalize(),
+            //     camera: this.camera.getCamera()
+            // } as any);
+
+            // const csmHelper = new CSMHelper(this.csm);
+            // csmHelper.visible = false;
+            // this.scene.addObject(csmHelper);
 
             //Статические объекты
             new Box(this.scene, this.physics, new THREE.Vector3(0.0, 0.0, 0.0), this.ZERO_QUATERNION, 128, 1, 128, 0, 2);
@@ -244,13 +281,14 @@ export class Game {
 
         this.playerController.update(delta);
 
+        // this.sun.update(this.camera);
         this.sun.update(this.camera);
+
+        // this.csm.update();
 
         this.sky.update(this.sun);
 
         this.clouds.update(delta);
-
-        this.reflectionCamera.update(this.renderer, this.scene);
 
         this.renderer.render();
 

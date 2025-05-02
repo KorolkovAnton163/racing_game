@@ -56,8 +56,8 @@ export class AmmoPhysics {
         this.physics.vehicleRespawn(uuid);
     }
 
-    private onUpdate(updates: Map<string, Float32Array>): void {
-        updates.forEach((value: Float32Array, uuid: string) => {
+    private onUpdate(updates: Map<string, Float32Array<ArrayBufferLike>>): void {
+        updates.forEach((value: Float32Array<ArrayBufferLike>, uuid: string) => {
             this.objects.get(uuid).update(value);
         });
     }

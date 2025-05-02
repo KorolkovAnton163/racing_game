@@ -9,7 +9,7 @@ import {MaterialType} from "../utils/Materials";
 import * as THREE from "three";
 
 export class Evo6 extends Car {
-    protected MAX_ENGINE_FORCE = 2000;
+    protected MAX_ENGINE_FORCE = 2_000;
 
     protected MAX_BREAKING_FORCE = 100;
 
@@ -20,7 +20,7 @@ export class Evo6 extends Car {
     protected chassisWidth = 0.7;
     protected chassisHeight = 0.5;
     protected chassisLength = 1.7;
-    protected massVehicle = 1360;
+    protected massVehicle = 1_360;
 
     protected wheelWidthFront = 0.05;
     protected wheelAxisPositionFront = 0.5;
@@ -50,7 +50,12 @@ export class Evo6 extends Car {
 
     protected forceWheels = [WHEEL_FRONT_LEFT, WHEEL_FRONT_RIGHT, WHEEL_BACK_LEFT, WHEEL_BACK_RIGHT];
 
-    protected get materials(): Record<string, { type: MaterialType, color: number, params?: Record<string, any> }> {
+    protected get materials(): Record<string, {
+        type: MaterialType,
+        color: number,
+        params?: Record<string, any>,
+        onBeforeRender?: (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera) => void,
+    }> {
         return {
             'Paint': {
                 type: MaterialType.StandardMetal,

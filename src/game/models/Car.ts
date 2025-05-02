@@ -12,13 +12,16 @@ import {
     WHEEL_FRONT_RIGHT
 } from "../interfaces/physic/IVehicleData";
 import Materials, {MaterialType} from "../utils/Materials";
+import {ReflectionMaterial} from "../materials/ReflectionMaterial";
+import {Reflector} from "three/examples/jsm/objects/Reflector";
+import {PerspectiveCamera} from "three";
 
 export abstract class Car implements IGameObject {
     protected abstract MAX_ENGINE_FORCE: number; //мкасимальная сила скоторой машина набирает скорость //2000
 
     protected abstract MAX_BREAKING_FORCE: number; //сала торможения //100
 
-    protected abstract TRANSMISSION_FORCE: number; //сила с которой машина наирает скорость при переключении передач
+    protected abstract TRANSMISSION_FORCE: number; //сила с которой машина набирает скорость при переключении передач
 
     protected abstract TRANSMISSION_BREAKING_FORCE: number;
 
@@ -58,7 +61,12 @@ export abstract class Car implements IGameObject {
 
     protected abstract forceWheels: number[];
 
-    protected abstract get materials(): Record<string, { type: MaterialType, color: number, params?: Record<string, any> }>;
+    protected abstract get materials(): Record<string, {
+        type: MaterialType,
+        color: number,
+        params?: Record<string, any>,
+        onBeforeRender?: (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera) => void,
+    }>;
 
     private readonly ZERO_QUATERNION: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
 
@@ -187,7 +195,7 @@ export abstract class Car implements IGameObject {
         this.createWheel(model.wheels.br, WHEEL_BACK_RIGHT);
     }
 
-    public update(updates: Float32Array): void {
+    public update(updates: Float32Array<ArrayBufferLike>): void {
         this.mesh.position.set(updates[0], updates[1], updates[2]);
         this.mesh.quaternion.set(updates[3], updates[4], updates[5], updates[6]);
 
@@ -238,13 +246,13 @@ export abstract class Car implements IGameObject {
     private createDebugWheel(index: number): void {
         const radius = index === WHEEL_FRONT_LEFT || index === WHEEL_FRONT_RIGHT ? this.wheelRadiusFront : this.wheelRadiusBack;
         const width = index === WHEEL_FRONT_LEFT || index === WHEEL_FRONT_RIGHT ? this.wheelWidthFront : this.wheelWidthBack;
-        const cylinder = new THREE.CylinderGeometry(radius, radius, width, 24, 1);
+        const cylinder = new THREE.CylinderGeometry(radius + 0.005, radius + 0.005, width, 24, 1);
 
         cylinder.rotateZ(Math.PI / 2);
 
         this.debugWheelMeshes[index] = new THREE.Mesh(
             cylinder,
-            new THREE.MeshPhongMaterial( { color :0x990000, wireframe: true })
+            new THREE.MeshPhongMaterial( { color :0x00ff94, wireframe: true })
         );
 
         this.scene.addObject(this.debugWheelMeshes[index]);

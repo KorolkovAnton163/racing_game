@@ -98,10 +98,10 @@ export const PARTICLE_SHADER = {
             return tmp;
         }
         
-        float luminance( const in vec3 rgb ) {
-            const vec3 weights = vec3( 0.2126729, 0.7151522, 0.0721750 );
-            return dot( weights, rgb );
-        }
+        // float luminance( const in vec3 rgb ) {
+        //     const vec3 weights = vec3( 0.2126729, 0.7151522, 0.0721750 );
+        //     return dot( weights, rgb );
+        // }
         
         bool isPerspectiveMatrix( mat4 m ) {
             return m[ 2 ][ 3 ] == - 1.0;
@@ -503,10 +503,10 @@ export const PARTICLE_SHADER = {
             return tmp;
         }
         
-        float luminance( const in vec3 rgb ) {
-            const vec3 weights = vec3( 0.2126729, 0.7151522, 0.0721750 );
-            return dot( weights, rgb );
-        }
+        // float luminance( const in vec3 rgb ) {
+        //     const vec3 weights = vec3( 0.2126729, 0.7151522, 0.0721750 );
+        //     return dot( weights, rgb );
+        // }
         
         bool isPerspectiveMatrix( mat4 m ) {
             return m[ 2 ][ 3 ] == - 1.0;

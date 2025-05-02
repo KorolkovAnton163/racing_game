@@ -130,7 +130,7 @@ export class ShaderParticleEmitter {
         opacity: ShaderAttribute;
     };
 
-    public paramsArray: Float32Array | null;
+    public paramsArray: Float32Array<ArrayBufferLike> | null;
 
     public resetFlags: {
         position: boolean;
@@ -455,7 +455,7 @@ export class ShaderParticleEmitter {
             const spread = prop.spread;
             const distribution = prop.distribution;
 
-            let pos: Float32Array;
+            let pos: Float32Array<ArrayBufferLike>;
             let positionX: number;
             let positionY: number;
             let positionZ: number;
@@ -628,7 +628,7 @@ export class ShaderParticleEmitter {
         this.activeParticleCount += 1;
     }
 
-    private checkParticleAges(start: number, end: number, params: Float32Array, dt: number): void {
+    private checkParticleAges(start: number, end: number, params: Float32Array<ArrayBufferLike>, dt: number): void {
         for (let i = end - 1, index, maxAge, age, alive; i >= start; --i ) {
             index = i * 4;
 
@@ -671,7 +671,7 @@ export class ShaderParticleEmitter {
     private activateParticles(
         activationStart: number,
         activationEnd: number,
-        params: Float32Array,
+        params: Float32Array<ArrayBufferLike>,
         dtPerParticle: number
     ): void {
         const direction = this.direction;
@@ -781,8 +781,14 @@ export class ShaderParticleEmitter {
                 array[index + 1] = 0.0;
             }
 
-            attr.updateRange.offset = 0;
-            attr.updateRange.count = -1;
+            // attr.updateRange.offset = 0;
+            // attr.updateRange.count = -1;
+
+            attr.updateRanges.forEach((range) => {
+                range.start = 0;
+                range.count = -1;
+            });
+
             attr.needsUpdate = true;
         }
     }

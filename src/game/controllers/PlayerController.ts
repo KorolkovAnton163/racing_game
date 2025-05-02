@@ -34,16 +34,28 @@ export class PlayerController {
 
     private speedometer: SpeedometerComponent;
 
-    constructor(model: ICarModel, scene: Scene, renderer: Renderer, camera: Camera, physics: AmmoPhysics, cubeTexture: THREE.CubeTexture) {
+    private autoRotation = false;
+
+    constructor(
+        model: ICarModel,
+        scene: Scene,
+        renderer: Renderer,
+        camera: Camera,
+        physics: AmmoPhysics,
+        cubeTexture: THREE.CubeTexture
+    ) {
         this.camera = camera;
         this.physics = physics;
         this.speedometer = new SpeedometerComponent();
         this.controls = new OrbitControls(camera.getCamera(), renderer.getElement());
         this.controls.enablePan = true;
-        this.controls.enableZoom = false;
-        this.controls.minDistance = 3.5;
+        this.controls.enableZoom = true;
+        this.controls.enableDamping = false;
+        this.controls.minDistance = 0.01;
         this.controls.maxDistance = 3.5;
-        this.controls.maxPolarAngle = Math.PI / 1.7;
+        // this.controls.maxPolarAngle = Math.PI / 1.7;
+        this.controls.autoRotate = false;
+        this.controls.autoRotateSpeed = 30;
 
         this.car = new Evo6(scene, camera, this.physics, this.START_CAR_POSITION);
 
@@ -62,6 +74,13 @@ export class PlayerController {
         this.controls.target = this.cameraTarget;
 
         this.controls.update();
+
+        if (this.autoRotation) {
+            if (this.camera.quaternion.y >= 0.9998) {
+                this.autoRotation = false;
+                this.controls.autoRotate = false;
+            }
+        }
 
         this.speedometer.update(this.car.speed, this.actions);
     }

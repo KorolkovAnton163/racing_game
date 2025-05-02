@@ -57,27 +57,26 @@ export class WaterMesh extends THREE.Mesh {
 
         const mirrorCamera = new THREE.PerspectiveCamera();
 
-        const renderTarget = new THREE.WebGLRenderTarget( textureWidth, textureHeight );
+        const renderTarget = new THREE.WebGLRenderTarget(textureWidth, textureHeight);
 
         const mirrorShader = {
-            uniforms: THREE.UniformsUtils.merge( [
-                THREE.UniformsLib[ 'fog' ],
-                THREE.UniformsLib[ 'lights' ],
+            uniforms: THREE.UniformsUtils.merge([
                 {
-                    'normalSampler': { value: null },
-                    'mirrorSampler': { value: null },
-                    'alpha': { value: 1.0 },
-                    'time': { value: 0.0 },
-                    'size': { value: size },
-                    'distortionScale': { value: 20.0 },
-                    'textureMatrix': { value: new THREE.Matrix4() },
-                    'sunColor': { value: new THREE.Color(0x7F7F7F) },
-                    'sunDirection': { value: new THREE.Vector3(0.70707, 0.70707, 0) },
-                    'eye': { value: new THREE.Vector3() },
-                    'waterColor': { value: new THREE.Color(0x555555) }
+                    ...THREE.UniformsLib.fog,
+                    ...THREE.UniformsLib.lights,
+                    normalSampler: { value: null },
+                    mirrorSampler: { value: null },
+                    alpha: { value: 1.0 },
+                    time: { value: 0.0 },
+                    size: { value: size },
+                    distortionScale: { value: 20.0 },
+                    textureMatrix: { value: new THREE.Matrix4() },
+                    sunColor: { value: new THREE.Color(0x7F7F7F) },
+                    sunDirection: { value: new THREE.Vector3(0.70707, 0.70707, 0) },
+                    eye: { value: new THREE.Vector3() },
+                    waterColor: { value: new THREE.Color(0x555555) }
                 }
-            ] ),
-
+            ]),
             vertexShader: /* glsl */`
 				uniform mat4 textureMatrix;
 				uniform float time;

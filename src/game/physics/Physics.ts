@@ -19,7 +19,7 @@ export class Physics {
 
     private bodies: Map<string, PhysicBody> = new Map();
 
-    private updates: Map<string, Float32Array> = new Map();
+    private updates: Map<string, Float32Array<ArrayBufferLike>> = new Map();
 
     constructor() {
         this.TRANSFORM_AUX = new Ammo.btTransform();
@@ -32,7 +32,7 @@ export class Physics {
         this.world.setGravity(new Ammo.btVector3( 0, -9.82, 0 ));
     }
 
-    public update(delta: number): Map<string, Float32Array> {
+    public update(delta: number): Map<string, Float32Array<ArrayBufferLike>> {
         const dt = delta / 1000;
 
         this.world.stepSimulation(dt, 5, 1 / 60);

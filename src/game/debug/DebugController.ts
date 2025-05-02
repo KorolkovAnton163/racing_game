@@ -4,13 +4,14 @@ import Stats from "three/examples/jsm/libs/stats.module";
 import {DirectionLight} from "../light/DirectionLight";
 import {DebugLines} from "./DebugLines";
 import {AmmoDebugDrawer, DefaultBufferSize} from "./AmmoDebugDrawer";
+import {Sun} from "../models/Sun";
 
 export class DebugController {
     private world: Ammo.btDiscreteDynamicsWorld;
 
     private scene: Scene;
 
-    private sun: DirectionLight;
+    private sun: Sun;
 
     private lines: DebugLines;
 
@@ -24,7 +25,7 @@ export class DebugController {
 
     // private debugDrawer: AmmoDebugDrawer;
 
-    public init(scene: Scene, sun: DirectionLight): void {
+    public init(scene: Scene, sun: Sun): void {
         if (!this.enabled) {
             return;
         }
@@ -35,10 +36,11 @@ export class DebugController {
 
         this.stats = new Stats();
         this.lines = new DebugLines();
-        this.shadowCamera = new THREE.CameraHelper(this.sun.getLight().shadow.camera);
+        this.shadowCamera = new THREE.CameraHelper(this.sun.mainLight.getLight().shadow.camera);
 
         this.scene.addObject(this.lines.getMesh());
         this.scene.addObject(this.shadowCamera);
+        // this.scene.addObject(new THREE.CameraHelper(this.sun.frontLight.getLight().shadow.camera));
 
         this.stats.dom.style.left = 'auto';
         this.stats.dom.style.right = '0px';

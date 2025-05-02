@@ -8,6 +8,8 @@ export enum MaterialType {
 }
 
 export default class {
+    public static UBO: THREE.UniformsGroup | null = null;
+
     public static create(type: MaterialType, color: number, name: string, params?: Record<string, any>): THREE.Material {
         switch (type) {
             case MaterialType.PhysicalGlass:
@@ -41,5 +43,18 @@ export default class {
                     name: name,
                 })
         }
+    }
+
+    public static globalUBO(): THREE.UniformsGroup {
+        if (this.UBO !== null) return this.UBO;
+
+        this.UBO = new THREE.UniformsGroup();
+
+        this.UBO.setName('Global');
+        this.UBO.add(new THREE.Uniform(new THREE.Vector2(2.0, 2.0)));
+        this.UBO.add(new THREE.Uniform(0));
+        this.UBO.add(new THREE.Uniform(1));
+
+        return this.UBO;
     }
 }

@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import {ILight} from "../interfaces/ILight";
 import {Camera} from "../Camera";
+import {IDirectionLightParams} from "../interfaces/IDirectionLightParams";
 
 export class DirectionLight implements ILight {
-
-    protected readonly d = 50.0;
+    protected readonly d = 20.0;
 
     protected light: THREE.DirectionalLight;
 
@@ -14,8 +14,8 @@ export class DirectionLight implements ILight {
         return this.light.position;
     }
 
-    constructor() {
-        this.light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+    constructor(params: IDirectionLightParams) {
+        this.light = new THREE.DirectionalLight(params.color, params.intensity);
 
         this.light.color.setHSL(0.1, 1, 0.95);
         this.light.position.multiplyScalar(30);
@@ -62,9 +62,9 @@ export class DirectionLight implements ILight {
         this.light.position.setFromSphericalCoords( 300, phi, theta);
     }
 
-    public update(camera: Camera): void {
+    public update(x: number, z: number): void {
         const shift = new THREE.Vector3(10, 10, 5);
-        this.light.target.position.set(camera.x, 0, camera.z);
+        this.light.target.position.set(x, 0, z);
         // this.light.position.copy(this.light.target.position).add(shift); //TODO: Возможно использовать для движения солнца
     }
 }

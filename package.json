@@ -27,12 +27,14 @@
   },
   "dependencies": {
     "@types/dat.gui": "^0.7.10",
-    "@types/three": "^0.152.1",
+    "@types/three": "^0.172.0",
     "ammo.js": "github:kripken/ammo.js",
     "ammojs-typed": "^1.0.6",
     "comlink": "^4.4.1",
     "dat.gui": "^0.7.9",
-    "three": "^0.153.0",
+    "postprocessing": "^6.36.6",
+    "realism-effects": "^1.1.2",
+    "three": "^0.172.0",
     "web-threads": "^1.0.135"
   }
 }

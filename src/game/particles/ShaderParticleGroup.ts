@@ -294,7 +294,7 @@ export class ShaderParticleGroup {
         // Set the `particlesPerSecond` value (PPS) on the emitter.
         // It's used to determine how many particles to release
         // on a per-frame basis.
-        emitter.calculatePPSValue( emitter.maxAge.value + emitter.maxAge.spread );
+        emitter.calculatePPSValue(emitter.maxAge.value + emitter.maxAge.spread);
         emitter.setBufferUpdateRanges(this.attributeKeys);
 
         // Store the offset value in the TypedArray attributes for this emitter.
@@ -315,9 +315,7 @@ export class ShaderParticleGroup {
                 // When creating a buffer, pass through the maxParticle count
                 // if one is specified.
                 this.attributes[attr].createBufferAttribute(
-                    this.maxParticleCount !== null ?
-                        this.maxParticleCount :
-                        this.particleCount
+                this.maxParticleCount !== null ? this.maxParticleCount : this.particleCount
                 );
             }
         }

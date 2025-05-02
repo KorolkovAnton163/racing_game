@@ -134,12 +134,12 @@ export class Utils {
      * interpolation.
      */
     public static interpolateArray(
-        srcArray: Array<number|THREE.Vector|THREE.Color>,
+        srcArray: Array<number|THREE.Vector3|THREE.Color>,
         newLength: number
-    ): Array<number|THREE.Vector|THREE.Color> {
+    ): Array<number|THREE.Vector3|THREE.Color> {
         const first = srcArray[0];
         const last = srcArray[srcArray.length - 1];
-        const newArray: Array<number|THREE.Vector|THREE.Color> = [];
+        const newArray: Array<number|THREE.Vector3|THREE.Color> = [];
         const factor = (srcArray.length- 1) / (newLength - 1);
 
         if (typeof first === 'number') {
@@ -199,10 +199,10 @@ export class Utils {
      * must be of the same type for the interpolation to work.
      */
     public static lerpTypeAgnostic(
-        start: number|THREE.Vector|THREE.Color,
-        end: number|THREE.Vector|THREE.Color,
+        start: number|THREE.Vector3|THREE.Color,
+        end: number|THREE.Vector3|THREE.Color,
         delta: number
-    ): number|THREE.Vector|THREE.Color|null {
+    ): number|THREE.Vector3|THREE.Color|null {
         if (typeof start === 'number' && typeof end === 'number') {
             return start + ((end - start) * delta);
         } else if (start instanceof THREE.Vector2 && end instanceof THREE.Vector2) {

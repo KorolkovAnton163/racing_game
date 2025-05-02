@@ -7,7 +7,7 @@ export class Scene {
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0xa8def0);
+        this.scene.background = new THREE.Color(0xA8DEF0);
 
         this.scene.fog = new THREE.Fog(this.scene.background, 1, 5000);
     }

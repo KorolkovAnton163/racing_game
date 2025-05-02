@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {SkyMesh} from "../meshs/SkyMesh";
 import {DirectionLight} from "../light/DirectionLight";
+import {Sun} from "./Sun";
 
 export class Sky {
     protected mesh: SkyMesh
@@ -10,8 +11,8 @@ export class Sky {
 
         const uniforms = (this.mesh.material as THREE.ShaderMaterial).uniforms;
 
-        uniforms['turbidity'].value = 10;
-        uniforms['rayleigh'].value = 2;
+        uniforms['turbidity'].value = 0.1;
+        uniforms['rayleigh'].value = 0.3;
         uniforms['mieCoefficient'].value = 0.005;
         uniforms['mieDirectionalG'].value = 0.8;
     }
@@ -20,11 +21,11 @@ export class Sky {
         this.mesh.scale.setScalar(scalar);
     }
 
-    public getMesh(): THREE.Object3D {
+    public getMesh(): THREE.Mesh {
         return this.mesh;
     }
 
-    public update(sun: DirectionLight): void {
-        (this.mesh.material as THREE.ShaderMaterial).uniforms['sunPosition'].value.copy(sun.position);
+    public update(sun: Sun): void {
+        (this.mesh.material as THREE.ShaderMaterial).uniforms['sunPosition'].value.copy(sun.mainLight.position);
     }
 }
